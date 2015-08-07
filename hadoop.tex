@@ -32,12 +32,11 @@ Atualmente o Hadoop conta com um ecossistema com diversos \textit{frameworks}. U
 \end{itemize}
 
 \subsection{MapReduce}
-O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programas de computador para processar uma enorme quantidade de dados de forma paralela, distribuída e resiliente a falhas. Os dados de entrada para um \textit{Job} MapReduce, por estarem armazenados no HDFS, são também processados de forma distribuída, aproveitando dos dados disponíveis localmente em um nó do \textit{cluster}. Um \textit{Job} MapReduce é, de forma resumida, composto por duas fases:
+O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programas de computador para processar uma enorme quantidade de dados de forma paralela, distribuída e resiliente a falhas. Os dados de entrada para um \textit{Job} MapReduce, por estarem armazenados no HDFS, são também processados de forma distribuída, aproveitando dos dados disponíveis localmente em um nó do \textit{cluster}. Na \ref{fig:mapreduce} podemos ver um desenho esquemático de um \textit{Job} MapReduce, que  é, de forma resumida, composto por duas fases:
 \begin{enumerate}
 	\item Map - quando os dados são processados e produzem saídas como tuplas no formato (Chave, Valor); 
 	\item Reduce - quando as tuplas com mesma chave são agrupadas para alguma atividade de agregação.  
 \end{enumerate}
-Na \ref{fig:mapreduce} podemos ver um desenho esquemático de um \textit{Job} MapReduce.
 
 \begin{figure}
 	\centering
@@ -54,11 +53,35 @@ Em geral, o programador não precisa se preocupar com comunicação de dados, tr
 nessa seção vou explicar o mapreduce e como resolver o problema do triangulo
 
 \section{Apache Spark}
+O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito geral e muito eficiente. A principal diferença em relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar em disco resultados intermediários. 
 
-O Apache Spark é doido demais
+A unidade básica de dados do Spark é o \textit{Resilient Distributed Dataset} (RDD). O conceito é semelhante ao bloco de dados do HDFS, mas trata-se de coleções de dados que estão na memória RAM dos nós do \textit{cluster}. Na prática, o Spark carrega os dados de um bloco do HDFS na memória RAM do nó em que o bloco está. Os programas Spark fazem dois tipos de operação com um RDD:
+\begin{itemize}
+	\item \textbf{Transformações}: Transformam um RDD em outro RDD. Entre as transformações mais comuns podemos encontrar as operações de Map e ReduceByKey (mesmo conceito do MapReduce), ordenação e operações de conjuntos, como união, interseção e diferença.
+	\item \textbf{Ações}: Produzem algum resultado a partir de um RDD. Ações típicas consistem em enumerar alguma quantidade de itens de um RDD, contar e somar. 
+\end{itemize}
+
+O Spark utiliza o conceito de "execução preguiçosa", para que só quando realmente um resultado tenha de ser produzido (uma \textbf{ação} é executada), e toda a sequência de passos necessária é conhecida, o Spark realmente lê os dados e faz cálculos na memória. Com isso, o motor de execução do Spark consegue otimizar tudo que será executado, escolhendo os melhores nós, a melhor sequência, etc.
+
+O Apache Spark também vem com um conjunto de bibliotecas com algoritmos para aprendizado de máquina, grafos, fluxo contínuo de dados e SQL. Algumas dessas vermos a seguir.
 
 \subsection{Utilizando o console python}
-como usar o console para resolver o problema do triângulo
+O Apache Spark possui consoles iterativos nas linguagens Python e Scala e seus \textit{Jobs} podem ser submetidos em batch também em Java. A API do Spark é acessada a partir de um objeto central denominado \texttt{ SparkContext }. Esse objeto contém a conexão com uma instância do cluster e a partir dele todos os outros objetos e métodos são acessados. Ao se iniciar um console do Spark, o objeto já está automaticamente disponível através da variável \texttt{ sc }. Para compreender a simplicidade do modelo de programação do Spark, o trecho de código abaixo lê um arquivo txt e faz a contagem de ocorrência das palavras.
+\begin{lstlisting}
+    //produz um RDD onde cada item e uma linha do arquivo texto
+    arquivo = sc.textFile('hdfs://servidor:10001/arquivo.txt') 
+    //para cada linha produz N itens no novo RDD, uma para cada palavra.
+    palavras = arquivo.flatMap(lambda linha : linha.split(' ')) 
+    //cria novo RDD com tuplas do formato (palavra, 1)
+    palavrasCV = palavras.map(lambda palavra : (palavra, 1)) 
+    //executa o Reduce usando a funcaoo add para os valores das tuplas.
+    contagemPalafras = palavrasCV.reduceByKey(add) 
+    //somente nesse comando toda a computacaoo e feita de forma otimizada.
+    contagemPalavras.collect() 
+\end{lstlisting}
+
+Para resolver o problema de contagem de triângulos utilizando o Spark, a idéia é semelhante à usada com o modelo do MapReduce.
+
 \subsection{SparkSQL}
 como usar o SparkSQL para resolver o problema do triângulo
 \subsection{Spark GraphX}
