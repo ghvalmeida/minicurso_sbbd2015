@@ -53,7 +53,7 @@ Em geral, o programador não precisa se preocupar com comunicação de dados, tr
 nessa seção vou explicar o mapreduce e como resolver o problema do triangulo
 
 \section{Apache Spark}
-O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito geral e muito eficiente. A principal diferença em relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar em disco resultados intermediários. 
+O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito geral e muito eficiente \cite{karau2015learning}. A principal diferença em relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar em disco resultados intermediários. 
 
 A unidade básica de dados do Spark é o \textit{Resilient Distributed Dataset} (RDD). O conceito é semelhante ao bloco de dados do HDFS, mas trata-se de coleções de dados que estão na memória RAM dos nós do \textit{cluster}. Na prática, o Spark carrega os dados de um bloco do HDFS na memória RAM do nó em que o bloco está. Os programas Spark fazem dois tipos de operação com um RDD:
 \begin{itemize}
