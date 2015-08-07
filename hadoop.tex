@@ -1,3 +1,63 @@
 \section{Hadoop}
+\subsection{Breve histórico}
+O problema era simples: como criar um índice para uma máquina de busca de toda a Internet? Foi com esse desafio que Mike Cafarella e Doug Cutting resolveram desenvolver o Apache Nutch. Rapidamente o \textit{crawler} e a máquina de busca ficaram prontos, mas eles perceberam que a arquitetura não escalaria para criar um índice de mais de um bilhão de páginas da Internet. Na mesma época, a equipe do Google publicou um conhecido artigo que explicava a arquitetura do GFS (Google FileSystem) [], que era um sistema de arquivos distribuído que era usado em sua máquina de busca. Doug e Mike decidiram criar uma implementação \textit{open source} dessa arquitetura e a chamaram de NDFS (Nutch Distributed FileSystem).
 
-Aqui vamos falar sobre Hadoop.
+Em 2004, a equipe do Google publicou um artigo detalhando como era possível criar um índice de toda a Internet usando um conceito denominado MapReduce []. Com base nesse trabalho, os desenvolvedores do Nutch migraram a maior parte de seus algoritmos para executar sobre o MapReduce e o NDFS. Mais tarde, Doug Cutting foi trabalhar no Yahoo! liderando uma equipe que construiu a nova geração de máquina de busca deles. Depois, o NDFS e o MapReduce tornaram-se um projeto da Apache sob o nome de Apache Hadoop.
+
+Desde então, o Hadoop tem sido usado mundialmente para processar enormes quantidades de dados. Vários frameworks foram construídos para executar usando a sua infraestrutura, como veremos a seguir. Diversos fornecedores criaram suas próprias distribuições do Hadoop, como Microsoft, IBM, EMC, Oracle e outras empresas especializadas como Cloudera e Hortonworks.
+
+\subsection{Funcionamento do HDFS}
+O HDFS, como mencionado acima, é um sistema de arquivos distribuídos, projetado para armazenar arquivos muito grandes\footnote{Atualmente há instâncias do HDFS armazenando PetaBytes de dados.} executando sobre \textit{hardware} barato. 
+
+Assim como em qualquer sistema de arquivos, um arquivo é dividido em \textbf{blocos} de dados. Enquanto, tipicamente um sistema de arquivos tradicional armazena dados em blocos de 512 bytes, o HDFS usa, por padrão, blocos de 64MB. Isso torna o HDFS ineficiente para uso em arquivos muito pequenos e numerosos. Para garantir disponibilidade e leitura em paralelo, cada um dos blocos é replicado em um dos nós de um \textit{cluster} HDFS. Quando um disco ou um dos nós do \textit{cluster} falha, além do bloco poder ser lido de outro nó, o sistema de arquivos automaticamente recria os blocos presentes naquele disco em outros nós do \textit{cluster}.
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{./hdfs_architecture.png}
+	\caption{Visão geral da arquitetura do HDFS}
+	\label{fig:hdfs_arch}
+\end{figure}
+
+A arquitetura de um \textit{cluster} HDFS divide-se em \textit{NameNode} e \textit{DataNode}. O primeiro armazena um índice de arquivos e de seus blocos e o segundo armazena os dados (blocos). Um cliente que queira ler arquivos no HDFS, primeiro consulta o \textit{NameNode}, que então diz de quais nós do cluster os blocos serão lidos, garantindo um balanceamento de carga na leitura. Arquivos criados no HDFS só podem ser modificados anexando conteúdo no final. Não pode-se modificar blocos já escritos. A falha do \textit{DataNode} implica na indisponibilidade de todo o HDFS e, por esse motivo, é importante mantê-lo resiliente a falha com mecanismos de redundância. Uma visão geral dessa arquitetura pode ser vista na figura \ref{fig:hdfs_arch}.
+
+\subsection{O ecossistema Hadoop}
+Atualmente o Hadoop conta com um ecossistema com diversos \textit{frameworks}. Uma lista, não exaustiva, de alguns dos principais projetos que compõem o ecossistema pode ser vista abaixo.
+\begin{itemize}
+	\item Ambari: Uma ferramenta web para aprovisionamento e gerenciamento de um cluster Hadoop e de diversos de seus componentes.
+	\item HBase: Um banco de dados relacional e colunar que utiliza a infraestrutura do Hadoop como mecanismo de armazenamento.
+	\item Hive: Uma infraestrutura de armazém de dados com suporte a sumarização de dados e consultas.
+	\item Pig: Uma linguagem de alto nível para fluxo de dados e um \textit{framework} de execução de computação distribuída. 
+	\item Spark: Uma \textit{engine} rápida e de propósito geral para processamento de dados em memória baseados nos dados do HDFS. O Spark oferece um modelo de programação simples e poderoso para executar uma enorme gama de atividades como ETL, aprendizagem de máquina, processamento contínuo de dados, processamento de grafos, etc.
+	\item Sqoop: uma ferramenta para transferência massiva de dados entre bancos de dados relacionais e o HDFS.
+	\item Mahout: Um conjunto de bibliotecas para executar algoritmos de aprendizagem de máquina e mineração de dados. Os coordenadores do projeto decidiram mover a implementação dos algoritmos de MapReduce para o Spark.
+\end{itemize}
+
+\subsection{MapReduce}
+O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programas de computador para processar uma enorme quantidade de dados de forma paralela, distribuída e resiliente a falhas. Os dados de entrada para um \textit{Job} MapReduce, por estarem armazenados no HDFS, são também processados de forma distribuída, aproveitando dos dados disponíveis localmente em um nó do \textit{cluster}. Um \textit{Job} MapReduce é, de forma resumida, composto por duas fases:
+\begin{enumerate}
+	\item Map - quando os dados são processados e produzem saídas como tuplas no formato (Chave, Valor); 
+	\item Reduce - quando as tuplas com mesma chave são agrupadas para alguma atividade de agregação.  
+\end{enumerate}
+Na \ref{fig:mapreduce} podemos ver um desenho esquemático de um \textit{Job} MapReduce.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{./mapreduce_job.png}
+	\caption{Um \textit{Job} MapReduce}
+	\label{fig:mapreduce}
+\end{figure}
+
+Um exemplo bem simples para entender o MapReduce é um Job para contar a ocorrência de cada palavra em um texto. Na fase de Map, cada linha lida do arquivo é dividida em suas palavras que produzem uma saída (PalavraA, 1). Note que se uma palavra aparece duas vezes na mesma linha duas tuplas idênticas serão produzidas. Na faze de Reduce, as tuplas com mesma chave serão agrupadas e os valores serão somados. 
+
+Em geral, o programador não precisa se preocupar com comunicação de dados, tratamento de concorrência e eventuais falhas em algum nó que está processando um determinado \textit{Job}. Esse é um dos grandes diferenciais do Hadoop MapReduce. 
+
+\subsection{Pig}
+nessa seção vou explicar o mapreduce e como resolver o problema do triangulo
+
+\section{Apache Spark}
+\subsection{Utilizando o console python}
+como usar o console para resolver o problema do triângulo
+\subsection{SparkSQL}
+como usar o SparkSQL para resolver o problema do triângulo
+\subsection{Spark GraphX}
+como usar o GraphX para resolver o problema do triângulo
+
