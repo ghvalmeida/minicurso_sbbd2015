@@ -68,7 +68,7 @@ O Apache Spark também vem com um conjunto de bibliotecas com algoritmos para ap
 \subsection{Utilizando o console python}
 O Apache Spark possui consoles iterativos nas linguagens Python e Scala e seus \textit{Jobs} podem ser submetidos em batch também em Java. A API do Spark é acessada a partir de um objeto central denominado \texttt{ SparkContext }. Esse objeto contém a conexão com uma instância do cluster e a partir dele todos os outros objetos e métodos são acessados. Ao se iniciar um console do Spark, o objeto já está automaticamente disponível através da variável \texttt{ sc }. Para compreender a simplicidade do modelo de programação do Spark, o trecho de código abaixo lê um arquivo txt e faz a contagem de ocorrência das palavras.
 
-\begin{lstlisting}[style=Python]
+\begin{lstlisting}[style=MyPythonStyle]
     //produz um RDD onde cada item e uma linha do arquivo texto
     arquivo = sc.textFile('hdfs://servidor:10001/arquivo.txt') 
     //para cada linha produz N itens no novo RDD, uma para cada palavra.
