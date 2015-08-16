@@ -13,12 +13,37 @@
 \usepackage{natbib}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmicif}{\textbf{se}}
+\renewcommand{\algorithmicthen}{\textbf{então}}
+\renewcommand{\algorithmicdo}{\textbf{faça}}
+\renewcommand{\algorithmicend}{\textbf{fim}}
+\renewcommand{\algorithmicfor}{\textbf{para}}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
-\lstset{frame=tb,
+
+\lstdefinestyle{SQL}{
+  breaklines=true,                                     % line wrapping on
+  language=SQL,
+  frame=ltrb,
+  framesep=5pt,
+  basicstyle=\normalsize,
+  keywordstyle=\ttfamily\color{OliveGreen},
+  identifierstyle=\ttfamily\color{CadetBlue}\bfseries,
+  commentstyle=\color{Brown},
+  stringstyle=\ttfamily,
+  showstringspaces=ture
+}
+
+\lstdefinestyle{Python}{
+  frame=tb,
   language=Python,
   aboveskip=3mm,
   belowskip=3mm,
@@ -35,6 +60,9 @@
   tabsize=3
 }
 
+
+
+
 \author{Victor Teixeira de Almeida e Vitor Alcântara Batista}
 \title{Tecnologias para gerenciamento de dados na era do big data}
 
@@ -46,6 +74,7 @@
 
 \include{resumo}
 \include{introducao}
+\include{triangulos}
 \include{relacional}
 \include{colunar}
 \include{memoria}
