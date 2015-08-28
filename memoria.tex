@@ -1,3 +1,22 @@
 \section{Bancos de dados em memória}
 
-Aqui vamos falar sobre bancos de dados em memória.
+Sistemas de banco de dados em memória são aqueles em que a fonte primária dos dados reside em memória principal (RAM). Esses dados tem, usualmente, cópia em disco, para eventuais falhas no hardware, como falta de energia. Embora os sistemas de bancos de dados tradicionais também mantém algum dado em memória como forma de fazer \textit{cache}, a principal diferença é que nos bancos de dados em memória os dados a fonte de dado primária (ou principal) está armazenada na memória RAM, enquanto nos tradicionais, está armazenada em disco \cite{garcia1992main}.
+
+Esse tipo de tecnologia ganhou força nos últimos anos devido aos avanços nas arquiteturas de hardware que, atualmente, permitem sistemas com Terabytes de memória RAM compartilhadas entre vários processadores. Além disso, houve um barateamento enorme no custo desses equipamentos, o que tornou viável os sistemas de banco de dados em memória. 
+
+Como o acesso à memória principal chega a ser 1000 vezes mais rápido que os discos modernos como SSD (disco de estádo sólido), esse tipo de tecnologia é bem convidativo. O leitor mais atento pode se perguntar: E se um sistema de banco de dados tradicional tiver um \textit{cache} grande o suficiente para caber todo o volume de dados, qual a diferença? Ainda sim esses sistemas são projetados de forma não ótima para uso da memória. Por exemplo, será necessário consultar um gerenciador do \textit{cache} toda vez que for acessar o dado e os índices estão em estruturas onde o acesso não é imediato.
+
+Atualmente, praticamente todos os grandes fornecedores de soluções tradicionais de bancos de dados relacionais também possuem versões em memória de seus produtos, como Microsoft, Oracle e IBM, mas também há fornecedores especializados nesse tipo de solução. Alguns desses produtos também possuem características de bancos de dados colunares, que descrevemos na seção \ref{colunar}.
+
+A seguir discutiremos algumas questões relacionadas ao projeto de sistemas de banco de dados em memória.
+
+\subsection{Controle de concorrência}
+
+\subsection{Processamento de transações}
+\subsection{Método de acesso}
+\subsection{Recuperação de falhas}
+
+
+
+
+
