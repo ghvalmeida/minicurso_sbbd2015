@@ -69,22 +69,39 @@ O Apache Spark também vem com um conjunto de bibliotecas com algoritmos para ap
 O Apache Spark possui consoles iterativos nas linguagens Python e Scala e seus \textit{Jobs} podem ser submetidos em batch também em Java. A API do Spark é acessada a partir de um objeto central denominado \texttt{ SparkContext }. Esse objeto contém a conexão com uma instância do cluster e a partir dele todos os outros objetos e métodos são acessados. Ao se iniciar um console do Spark, o objeto já está automaticamente disponível através da variável \texttt{ sc }. Para compreender a simplicidade do modelo de programação do Spark, o trecho de código abaixo lê um arquivo txt e faz a contagem de ocorrência das palavras.
 
 \begin{lstlisting}[style=MyPythonStyle]
-    //produz um RDD onde cada item e uma linha do arquivo texto
+    ##produz um RDD onde cada item e uma linha do arquivo texto
     arquivo = sc.textFile('hdfs://servidor:10001/arquivo.txt') 
-    //para cada linha produz N itens no novo RDD, uma para cada palavra.
+    ##para cada linha produz N itens no novo RDD, uma para cada palavra.
     palavras = arquivo.flatMap(lambda linha : linha.split(' ')) 
-    //cria novo RDD com tuplas do formato (palavra, 1)
+    ##cria novo RDD com tuplas do formato (palavra, 1)
     palavrasCV = palavras.map(lambda palavra : (palavra, 1)) 
-    //executa o Reduce usando a funcaoo add para os valores das tuplas.
+    ##executa o Reduce usando a funcaoo add para os valores das tuplas.
     contagemPalafras = palavrasCV.reduceByKey(add) 
-    //somente nesse comando toda a computacaoo e feita de forma otimizada.
+    ##somente nesse comando toda a computacaoo e feita de forma otimizada.
     contagemPalavras.collect() 
 \end{lstlisting}
 
 Para resolver o problema de contagem de triângulos utilizando o Spark, a idéia é semelhante à usada com o modelo do MapReduce.
 
-\subsection{SparkSQL}
-como usar o SparkSQL para resolver o problema do triângulo
-\subsection{Spark GraphX}
-como usar o GraphX para resolver o problema do triângulo
+\subsection{Spark SQL}
+O Spark SQL é um módulo do Apache Spark para processamento de dados estruturados (relacionais). Ele utiliza uma abstração denominada DataFrame, e também serve como uma máquina de execução de consultas distribuídas baseada em SQL. 
 
+Um DataFrame do Spark SQL tem as mesmas características de um DataFrame em R ou em Pandas (Python) e pode ser criado baseando-se em diversas fontes de dados, como um arquivo json, um arquivo texto, um RDD do Spark, uma tabela do Hive, ou qualquer fonte que possua um driver JDBC. O \textit{schema} de um DataFrame pode ser inferido através de reflexão ou definido programaticamente. 
+
+O trecho de código abaixo mostra como executar a contagem de triângulos utilizando o SQL proposto na seção \ref{triangulos}.
+
+\subsection{Spark GraphX}
+O Spark GraphX é um novo módulo do Apache Spark que fornece um conjunto de abstrações e ferramentas para processamento paralelo de grafos. Nas abstrações de nós e arestas é possível incluir propriedades, como pesos, capacidades máximas e mínimas, ou qualquer outra propriedade que seja relevante para modelar um problema. 
+
+O Spark GraphX possui um conjunto de operações essenciais para diversos algoritmos de análise de grafos, como operações em paralelo sobre os nós/arcos dos grafos, obtenção de subgrafos, inversão de arestas e agregação de vizinhos. Esse último, por exemplo, pode ser usado para calcular o grau de cada vértice de um grafo. Mais detalhes desse módulo podem ser obtidos na documentação oficial do produto \footnote{http://spark.apache.org/docs/latest/graphx-programming-guide.html}. 
+
+Como é recente seu desenvolvimento, ainda são poucos os algoritmos implementados e a única linguagem suportada é o Scala. Atualmente conta com algoritmos de PageRank, Identificação de componentes conectados e contagem de triângulos, que demonstramos o uso no trecho de código abaixo. Comparado com as estratégias de MapReduce, a contagem de triângulos utilizando Spark GraphX é de várias ordens de grandeza mais rápido e eficiente em consumo de memória. 
+
+\begin{lstlisting}[style=MyPythonStyle]
+    ## Carrega o grafo a partir de um arquivo cujas linhas sao pares de identificadores dos nos, definindo uma aresta
+    val graph = GraphLoader.edgeListFile(sc, "graphx/data/followers.txt", true).partitionBy(PartitionStrategy.RandomVertexCut)
+    ## conta o numero de triangulos
+    val triCounts = graph.triangleCount().vertices
+    ## imprime o resultado
+    println(triCounts.mkString("\n"))
+\end{lstlisting}
