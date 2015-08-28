@@ -17,4 +17,4 @@ $(REPORT).pdf: $(SRCS) $(REFS) $(FIGS)
 pdf: $(REPORT).pdf
 
 clean:
-	rm -f *.dvi *.aux *.log *.blg *.bbl *~ $(REPORT).ps $(REPORT).pdf
+	rm -f *.dvi *.aux *.log *.blg *.bbl *~ *.ps *.pdf

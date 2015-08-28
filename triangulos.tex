@@ -48,9 +48,16 @@ que garante que $u>v$ e $w>u$, assumindo que os vértices possuam identificadore
 números naturais, por exemplo. A complexidade deste algoritmo depende da implementação da busca pelos 
 vértices $u$ e $w$ nas listas de adjacências de $v$ e $u$, respectivamente.
 
-Vamos agora mostrar como definir este algoritmo em SQL.
+O que torna este problema interessante, em termos de execução, é a natureza dos dados. Normalmente, esses
+dados de redes sociais possuem distorção (\emph{skew}), seguindo uma função de distribuição chamada 
+\emph{power-law}. Tentando explicar de uma forma simples, o que acontece é que a grande maioria dos 
+vértices possuem muito poucas ligações, mas uma pequena fração possui muitas ligações. O gráfico abaixo 
+mostra a distribuição dos dados; o eixo das abcissas mostra o grau do vértice e o eixo das ordenadas 
+mostra quantos vértices possuem tal grau.
 
-\begin{lstlisting}[style=MySQLStyle]
-SELECT follower 
-FROM TWITTER;
-\end{lstlisting}
+\begin{figure}[h!]
+	\centerline{\includegraphics{power_law.eps}}
+	\caption{Distribuição de dados de redes sociais (\emph{power-law}) com dados do Twitter}
+	\label{fig:powerlaw}
+\end{figure}
+
