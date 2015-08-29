@@ -100,7 +100,7 @@ from pyspark.sql import SQLContext, Row
 sqlContext = SQLContext(sc)
 
 # Carrega o arquivo de arestas para um RDD
-linhas = sc.textFile("hdfs://npaa0352:10001/data/triangles/twitter_combined.txt")
+linhas = sc.textFile("hdfs://servidor:10001/data/triangles/twitter_combined.txt")
 partes = linhas.map(lambda l: l.split())
 arestas = partes.map(lambda p: Row(follower=int(p[0]), followee=int(p[1])))
 
