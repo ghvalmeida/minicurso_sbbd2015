@@ -12,7 +12,7 @@ O HDFS, como mencionado acima, é um sistema de arquivos distribuídos, projetad
 Assim como em qualquer sistema de arquivos, um arquivo é dividido em \textbf{blocos} de dados. Enquanto, tipicamente um sistema de arquivos tradicional armazena dados em blocos de 512 bytes, o HDFS usa, por padrão, blocos de 64MB. Isso torna o HDFS ineficiente para uso em arquivos muito pequenos e numerosos. Para garantir disponibilidade e leitura em paralelo, cada um dos blocos é replicado em um dos nós de um \textit{cluster} HDFS. Quando um disco ou um dos nós do \textit{cluster} falha, além do bloco poder ser lido de outro nó, o sistema de arquivos automaticamente recria os blocos presentes naquele disco em outros nós do \textit{cluster}.
 \begin{figure}
 	\centering
-	\includegraphics[width=\linewidth]{./hdfs_architecture.png}
+	\includegraphics[width=\linewidth]{./Arquitetura_HDFS.jpg}
 	\caption{Visão geral da arquitetura do HDFS}
 	\label{fig:hdfs_arch}
 \end{figure}
@@ -40,7 +40,7 @@ O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programa
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\linewidth]{./mapreduce_job.png}
+	\includegraphics[width=\linewidth]{./Job_Mapreduce.jpg}
 	\caption{Um \textit{Job} MapReduce}
 	\label{fig:mapreduce}
 \end{figure}
@@ -92,7 +92,7 @@ O Spark SQL é um módulo do Apache Spark para processamento de dados estruturad
 
 Um DataFrame do Spark SQL tem as mesmas características de um DataFrame em R ou em Pandas (Python) e pode ser criado baseando-se em diversas fontes de dados, como um arquivo json, um arquivo texto, um RDD do Spark, uma tabela do Hive, ou qualquer fonte que possua um driver JDBC. O \textit{schema} de um DataFrame pode ser inferido através de reflexão ou definido programaticamente. 
 
-O trecho de código abaixo mostra como executar a contagem de triângulos utilizando o SQL proposto na seção \ref{triangulos}.
+O trecho de código abaixo mostra como executar a contagem de triângulos utilizando o SQL proposto na seção \ref{triangles}.
 
 \begin{lstlisting}[style=MyPythonStyle]
 # Importa os modulos e cria o contexto
