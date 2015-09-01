@@ -66,6 +66,11 @@ Nos exemplos que iremos demonstrar durante a execução deste minicurso, serão 
 de dados, que foram utilizados por Leskovec et al. \cite{leskovec2012learning} e encontram-se 
 disponibilizados pelo Projeto SNAP (\textit{Stanford Network Analyst Project}), contendo
 usuários do Facebook e do Twitter, com estatísticas descritas na Tabela \ref{tab:datasets}.
+Deve-se atentar para o fato de que o Twitter e o Facebook possuem políticas diferentes; no Twitter
+é possível que um usuário siga algum outro sem que este também o siga de volta, enquanto que
+no Facebook a contrapartida é exigida. Isto torna o grafo do Twitter direcionado e o do Facebook
+não direcionado. Nós iremos, nos nossos exemplos, lidar com grafos direcionados e, portanto, será
+necessário duplicar os dados do Facebook, criando a volta de cada ligação ou aresta.
 
 \begin{table}[h]
 \caption{Estatísticas dos conjuntos de redes sociais (Facebook e Twitter) utilizados.}
