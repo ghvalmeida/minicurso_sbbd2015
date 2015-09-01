@@ -1,6 +1,24 @@
 \section{Bancos de dados paralelos}
 
-Parallel databases \cite{Dewitt1992}
+Bancos de dados paralelos ou massivamente paralelos (MPP, do inglês 
+\emph{massively parallel processing}) também não são tecnologia 
+recente, discussões sobre esse assunto e implementações de sistemas
+datam da década de 80-90 \cite{Dewitt1992, Fushimi1986}. Nestes 
+sistemas, os dados das tabelas são distribuídos em diversos 
+nós de um cluster e o processamento de consulta é paralelizado.
+
+Os dados podem ser distribuídos através de particionamento vertical,
+onde as tabelas são quebradas por colunas; horizontal, onde as 
+tabelas são quebradas por tuplas; ou ambos. A distribuição dos 
+dados entre os nós pode ou não utilizar o conhecimento prévio
+das consultas mais utilizas no sistema (\emph{query workload}),
+e o otimizador de consultas, nestes casos, conhecendo a forma
+como os dados estão distribuídos, pode repassar a parte das
+consultas para os nós específicos que devem processá-la.
+
+Há diversas formas de distribuição dos dados entre os nós, mas 
+a mais comum e implementada pela grande maioria dos bancos de 
+dados paralelos é 
 
 Shared-nothing \cite{Stonebraker1986}
 
