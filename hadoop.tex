@@ -1,15 +1,43 @@
 \section{Hadoop}
+
 \subsection{Breve histórico}
-O problema era simples: como criar um índice para uma máquina de busca de toda a Internet? Foi com esse desafio que Mike Cafarella e Doug Cutting resolveram desenvolver o Apache Nutch. Rapidamente o \textit{crawler} e a máquina de busca ficaram prontos, mas eles perceberam que a arquitetura não escalaria para criar um índice de mais de um bilhão de páginas da Internet. Na mesma época, a equipe do Google publicou um conhecido artigo que explicava a arquitetura do GFS (Google FileSystem) \cite{ghemawat2003google}, que era um sistema de arquivos distribuído que era usado em sua máquina de busca. Doug e Mike decidiram criar uma implementação \textit{open source} dessa arquitetura e a chamaram de NDFS (Nutch Distributed FileSystem).
 
-Em 2004, a equipe do Google publicou um artigo detalhando como era possível criar um índice de toda a Internet usando um conceito denominado MapReduce \cite{dean2008mapreduce}. Com base nesse trabalho, os desenvolvedores do Nutch migraram a maior parte de seus algoritmos para executar sobre o MapReduce e o NDFS. Mais tarde, Doug Cutting foi trabalhar no Yahoo! liderando uma equipe que construiu a nova geração de máquina de busca deles. Depois, o NDFS e o MapReduce tornaram-se um projeto da Apache sob o nome de Apache Hadoop.
+O problema era simples: como criar um índice para uma máquina de busca de toda a Internet? Foi com esse 
+desafio que Mike Cafarella e Doug Cutting resolveram desenvolver o Apache Nutch. Rapidamente o 
+\textit{crawler} e a máquina de busca ficaram prontos, mas eles perceberam que a arquitetura não 
+escalaria para criar um índice de mais de um bilhão de páginas da Internet. Na mesma época, a equipe 
+do Google publicou um artigo que explicava a arquitetura do GFS (Google FileSystem) 
+\cite{ghemawat2003google}, que era um sistema de arquivos distribuído usado em sua máquina de busca. 
+Doug e Mike decidiram criar uma implementação \textit{open source} dessa arquitetura e a chamaram 
+de NDFS (Nutch Distributed FileSystem).
 
-Desde então, o Hadoop tem sido usado mundialmente para processar enormes quantidades de dados. Vários frameworks foram construídos para executar usando a sua infraestrutura, como veremos a seguir. Diversos fornecedores criaram suas próprias distribuições do Hadoop, como Microsoft, IBM, EMC, Oracle e outras empresas especializadas como Cloudera e Hortonworks.
+Em 2004, a equipe do Google publicou novo artigo agora detalhando como era possível criar um índice de 
+toda a Internet usando o mecanismo de processamento paralelo denominado MapReduce \cite{dean2008mapreduce}. 
+Com base nesse trabalho, os desenvolvedores do Nutch migraram a maior parte de seus algoritmos para 
+executar sobre o MapReduce e o NDFS. Mais tarde, Doug Cutting foi trabalhar no Yahoo! liderando uma 
+equipe que construiu a nova geração de máquina de busca deles. Depois, o NDFS (posteriormente chamado
+de HDFS ou \textit{Hadoop Distributed Filesystem}) e o MapReduce tornaram-se 
+um projeto da Apache Software Foundation sob o nome de Apache Hadoop.
+
+Desde então, o Hadoop tem sido usado mundialmente para processar enormes quantidades de dados. Vários 
+frameworks foram construídos para executar usando a sua infraestrutura, como veremos a seguir. 
+Diversos fornecedores criaram suas próprias distribuições do Hadoop, como Microsoft, IBM, EMC, Oracle e 
+outras empresas especializadas como Cloudera e Hortonworks.
 
 \subsection{Funcionamento do HDFS}
-O HDFS, como mencionado acima, é um sistema de arquivos distribuídos, projetado para armazenar arquivos muito grandes\footnote{Atualmente há instâncias do HDFS armazenando PetaBytes de dados.} executando sobre \textit{hardware} barato. 
 
-Assim como em qualquer sistema de arquivos, um arquivo é dividido em \textbf{blocos} de dados. Enquanto, tipicamente um sistema de arquivos tradicional armazena dados em blocos de 512 bytes, o HDFS usa, por padrão, blocos de 64MB. Isso torna o HDFS ineficiente para uso em arquivos muito pequenos e numerosos. Para garantir disponibilidade e leitura em paralelo, cada um dos blocos é replicado em um dos nós de um \textit{cluster} HDFS. Quando um disco ou um dos nós do \textit{cluster} falha, além do bloco poder ser lido de outro nó, o sistema de arquivos automaticamente recria os blocos presentes naquele disco em outros nós do \textit{cluster}.
+O HDFS, como mencionado acima, é um sistema de arquivos distribuídos, projetado para armazenar arquivos 
+muito grandes\footnote{Atualmente há instâncias do HDFS armazenando PetaBytes de dados.} executando sobre 
+hardware commodity. 
+
+Assim como em qualquer sistema de arquivos, um arquivo é dividido em \textbf{blocos} de dados. Enquanto 
+tipicamente um sistema de arquivos tradicional armazena dados em pequenos blocos (e.g. 512 bytes ou 1 kbyte), 
+o HDFS usa, por padrão, blocos de 64MB. Isso torna o HDFS ineficiente para uso em arquivos muito pequenos 
+e numerosos. Para garantir disponibilidade e leitura em paralelo, cada um dos blocos é replicado em um dos 
+nós de um \textit{cluster} HDFS. Quando um disco ou um dos nós do \textit{cluster} falha, além do bloco 
+poder ser lido de outro nó, o sistema de arquivos automaticamente recria os blocos presentes naquele disco 
+em outros nós do \textit{cluster}.
+
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{./Arquitetura_HDFS.jpg}
