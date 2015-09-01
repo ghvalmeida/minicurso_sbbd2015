@@ -49,6 +49,88 @@ Um exemplo bem simples para entender o MapReduce é um Job para contar a ocorrê
 
 Em geral, o programador não precisa se preocupar com comunicação de dados, tratamento de concorrência e eventuais falhas em algum nó que está processando um determinado \textit{Job}. Esse é um dos grandes diferenciais do Hadoop MapReduce. 
 
+Uma possível solução para contagem de triângulos utilizando MapReduce, baseada na proposta feita por Suri e Sergei \cite{suri2011counting} envolve o encadeamento de 3 \textit{Jobs} MapReduce encadeados. O primeiro constrói um conjunto de todas as tríades (par de arestas que compartilham um vértice) de um grafo. Essas tríades, juntamente com as arestas originais são gerados como linhas, mas com um atributo identificador dizendo se é uma aresta original do arquivo ou se foi gerada pelo primeiro passo. Essa saída serve de entrada para o segundo \textit{Job}, que particiona XXX. Uma dessas partições conterá $n$ triângulos se ela contém uma aresta original e $n$ tríades. Um terceiro \textit{Job} counta o número de triângulos gerados pelo passo anterior e produz o resultado final. Vamos olhar um exemplo para melhor entendimento.
+
+Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os números identificam os nós e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: (Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Bianca, Marcelo).
+
+\begin{table}[]
+\centering
+\caption{Exemplo de grafo de entrada.}
+\label{grafoExemplo}
+\begin{tabular}{cc}
+\hline
+{\bf Origem} & {\bf Destino} \\ \hline
+André        & Bernardo      \\ \hline
+André        & Marcelo       \\ \hline
+André        & Bianca        \\ \hline
+Bernardo     & Chico         \\ \hline
+Bernardo     & Renato        \\ \hline
+Chico        & Renato        \\ \hline
+Chico        & Roberto       \\ \hline
+Chico        & Livia         \\ \hline
+Marcelo      & Bianca        \\ \hline
+Roberto      & Renato        \\ \hline      
+\end{tabular}
+\end{table}
+
+Após a etapa de Map do primeiro \textit{Job}, são gerados um conjunto de (chave, valor) conforme a tabela \ref{map1}. Note que a chave é escolhida como o vértice de menor valor.
+
+\begin{table}[]
+\centering
+\caption{Resultado da etapa de Map do primeiro \textit{Job}.}
+\label{map1}
+\begin{tabular}{cc}
+
+\hline
+{\bf Chave} & {\bf Valor (arest)}      \\ \hline
+André       & André, Marcelo   \\ \hline
+André       & André, Bianca    \\ \hline
+André       & André, Bernardo  \\ \hline
+Marcelo     & Marcelo, Bianca  \\ \hline
+Bernardo    & Bernardo, Chico  \\ \hline
+Bernardo    & Bernardo, Renato \\ \hline
+Chico       & Chico, Roberto   \\ \hline
+Chico       & Chico, Livia     \\ \hline
+Chico       & Chico, Renato    \\ \hline
+Roberto     & Roberto, Renato  \\ \hline     
+\end{tabular}
+\end{table}
+
+A etapa de Reduce do primeiro \textit{Job} é a mais importante. Nessa etapa, para cada chave da tabela \ref{map1}, são gerados as arestas originais (valor na tabela) e as tríades baseadas nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1}.
+
+\begin{table}[]
+\centering
+\caption{Resultado da etapa de Reduce do primeiro \textit{Job}.}
+\label{reduce1}
+\begin{tabular}{ccc}
+\hline
+{\bf Chave}                                                    & {\bf Gerado} & {\bf Tríades}                                                                         \\ \hline
+\begin{tabular}[c]{@{}c@{}}André,\\   Bernardo\end{tabular}    & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}André,\\   Marcelo\end{tabular}     & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}André,\\   Bianca\end{tabular}      & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Chico\end{tabular}    & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Bianca\end{tabular}   & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Bernardo\}, \{André,\\   Bianca\}\end{tabular}    \\ \hline
+\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Renato\end{tabular}   & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}Bernardo, \\   Marcelo\end{tabular} & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Bernardo\}, \{André,\\   Marcelo\}\end{tabular}   \\ \hline
+\begin{tabular}[c]{@{}c@{}}Chico,\\   Livia\end{tabular}       & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}Chico,\\   Roberto\end{tabular}     & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}Chico,\\   Renato\end{tabular}      & 1            & \begin{tabular}[c]{@{}c@{}}\{Bernardo, Chico\}, \{Bernardo,\\   Renato\}\end{tabular} \\ \hline
+\begin{tabular}[c]{@{}c@{}}Chico,\\   Renato\end{tabular}      & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}Livia,\\   Roberto\end{tabular}     & 1            & \{Chico, Livia\}, \{Chico, Roberto\}                                                  \\ \hline
+\begin{tabular}[c]{@{}c@{}}Livia,\\   Renato\end{tabular}      & 1            & \{Chico, Livia\}, \{Chico, Renato\}                                                   \\ \hline
+\begin{tabular}[c]{@{}c@{}}Marcelo,\\   Bianca\end{tabular}    & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Marcelo\}, \{André,\\   Bianca\}\end{tabular}     \\ \hline
+\begin{tabular}[c]{@{}c@{}}Marcelo,\\   Bianca\end{tabular}    & 0            &                                                                                       \\ \hline
+\begin{tabular}[c]{@{}c@{}}Roberto,\\   Renato\end{tabular}    & 1            & \begin{tabular}[c]{@{}c@{}}\{Chico, Roberto\}, \{Chico,\\   Renato\}\end{tabular}     \\ \hline
+\begin{tabular}[c]{@{}c@{}}Roberto,\\   Renato\end{tabular}    & 0            &                                                                                       \\ \hline
+\end{tabular}
+\end{table}
+
+O segundo \textit{Job} tem apenas a etapa de Reduce e toma de entrada o resultado produzido na tabela \ref{reduce1}. Para cada grupo de chaves (arestas), é verificado se há uma aresta original (Gerado = 0). Se sim, é verificada em quantas tríades essa aresta fecha um triângulo, emitindo uma contagem parcial para cada chave. Pelo nosso exemplo, podemos ver que isso ocorre nas chaves (Chico,Renato), (Lívia,Renato) e (Marcelo, Bianca), totalizando nossos 3 triângulos.
+
+A última etapa (terceiro \textit{Job}) é uma tarefa trivial de somar as contagens parciais emitidas pelo passo anterior.
+
+These triads and the original edges are emitted as rows by the first MR job, with a field added to distinguish the two. Note that the output of the first job can be quite large, especially in a dense graph. Such output is consumed by the second MR job, which partitions the rows by either the unclosed edge, if the row is a triad, or the original edge. A partition has n triangles if it contains an original edge and n triads. A third, trivial MR job counts the triangles produced by the second job, to produce the final result.
+
 \subsection{Pig}
 nessa seção vou explicar o mapreduce e como resolver o problema do triangulo
 
