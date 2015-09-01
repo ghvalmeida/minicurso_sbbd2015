@@ -63,6 +63,7 @@ de alguns dos principais projetos que compõem o ecossistema pode ser vista abai
 \end{itemize}
 
 \subsection{MapReduce}
+\label{sec:mapreduce}
 
 O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programas de computador para 
 processar uma enorme quantidade de dados de forma paralela, distribuída e resiliente a falhas. Os dados 
@@ -195,9 +196,81 @@ pelo passo anterior.
 
 \subsection{Hive}
 
+O Hadoop MapReduce, como descrito anteriormente na Seção \ref{sec:mapreduce}, é um framework para ser 
+utilizado e desenvolvido em uma linguagem de programação, e.g. Java, com as complexidades inerentes de 
+um desenvolvimento de software em linguagens de computação. Assim surgiu rapidamente a necessidade de 
+especificação de programas MapReduce em linguagens declarativas de alto nível.
+
+O Hive \cite{thusoo2009hive} é então uma das iniciativas neste sentido, sendo uma especificação de 
+\textit{jobs} MapReduce em linguagem similar ao SQL: o HiveQL. O Hive foi inicialmente desenvolvido 
+pelo Facebook e atualmente seus principais contribuidores são o próprio Facebook e o Netflix.
+
+O Hive entende arquivos do HDFS como tabelas com estrutura, de forma similar a um SGBD. Entretanto, 
+nenhuma estrutura adicional de SGBD é criada pelo Hive, exceto os metadados sobre o formato dos arquivos 
+em tabelas. No HiveQL há uma linguagem de definição destes formatos.
+
+Como um exemplo, vamos imaginar que temos um arquivo contendo os dados do Twitter no HDFS contendo 
+os dados da tabela do twitter descrita na Seção \ref{sec:relacional} com atributos \textit{follower} e
+\textit{followee}, ou seja, um arquivo texto em formato CSV contendo dois números inteiros (delimitados
+por vírgula). O comando HiveQL abaixo cria os metadados para a tabela Twitter a partir deste arquivo.
+
+\begin{verbatim}
+CREATE TABLE twitter (follower INT, followee INT);
+LOAD DATA INPATH '/input/twitter' OVERWRITE INTO TABLE twitter;
+\end{verbatim}
+
+Embora o HiveQL não implemente a linguagem SQL em todas as suas funcionalidades, a consulta da
+Seção \ref{sec:relacional} que resolve o problema da contagem dos triângulos pode ser aplicada
+diretamente no console do Hive.
+
+É importante notar que o Hive interpreta o SQL e gera \textit{jobs} MapReduce em Java, que são
+compilados e executados sob demanda.
 
 \subsection{Pig}
 
+De forma similar ao Hive, o Yahoo! criou o Pig \cite{olston2008pig} em 2006 e o moveu como um projeto 
+para o Hadoop em 2007, com o intuito de simplificar o desenvolvimento de \textit{jobs} MapReduce 
+através de uma linguagem procedural de alto nível (Pig Latin).
+
+O Pig Latin, diferentemente do HiveQL, é uma linguagem procedural e não declarativa. É possível 
+efetuar atribuições e manipulação de variáveis intermediárias. Em geral, cada comando PigLatin
+corresponde a um operador da álgebra relacional.
+
+O exemplo abaixo mostra a declaração da tabela do Twitter na linguagem Pig Latin.
+
+\begin{verbatim}
+Twitter = LOAD '/input/twitter' USING PigStorage(',') AS (follower: int, followee: int);
+\end{verbatim}
+
+Note que, diferentemente do Hive, o Pig Lating cria a tabela Twitter e ao mesmo tempo instancia 
+a mesma lendo do arquivo de input com o formato especificado.
+
+O código abaixo executa a contagem dos triângulos, uma vez mapeada a tabela Twitter.
+
+\begin{verbatim}
+Twitter_1 = LOAD '/input/twitter' USING PigStorage(' ') AS (follower:int, followee:int);
+Twitter_2 = LOAD '/input/twitter' USING PigStorage(' ') AS (follower:int, followee:int);
+Twitter_3 = LOAD '/input/twitter' USING PigStorage(' ') AS (follower:int, followee:int);
+
+Twitter_SelfJoin = JOIN Twitter_1 by $1, Twitter_2 by $0;
+Twitter_FullJoin = JOIN Twitter_3 by ($1, $0), Twitter_SelfJoin by ($0, $3);
+
+Triangles = FILTER Twitter_FullJoin BY ($0 < $1 AND $1 < $3) OR ($0 > $1 AND $1 > $3);
+
+Triangles_Grp = GROUP Triangles ALL;
+Triangles_Cnt = FOREACH Triangles_Grp GENERATE COUNT(Triangles);
+
+DUMP Triangles_Cnt;
+\end{verbatim}
+
+As três primeiras linhas atribuem as tabelas Twitter\_1, Twitter\_2 e Twitter\_3. Esta atribuição 
+em três tabelas não deveria ser necessária, mas na versão do Pig (antiga) em que criamos e executamos
+este código não era possível fazer uma junção da tabela com ela mesma (\emph{self join}).
+
+As próximas duas linhas executam as duas junções; a próxima, um filtro que elimina as duplicatas;
+e as duas penúltimas executam um agrupamento para contagem. A última linha imprime o valor final.
+Somente a partir de um comando DUMP que o Pig começa a construir os \textit{jobs} MapReduce, compilar
+e executá-los.
 
 \section{Apache Spark}
 O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito geral e muito eficiente \cite{karau2015learning}. A principal diferença em relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar em disco resultados intermediários. 
