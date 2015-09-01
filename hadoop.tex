@@ -48,10 +48,13 @@ em outros nós do \textit{cluster}.
 A arquitetura de um \textit{cluster} HDFS divide-se em \textit{NameNode} e \textit{DataNode}. O primeiro armazena um índice de arquivos e de seus blocos e o segundo armazena os dados (blocos). Um cliente que queira ler arquivos no HDFS, primeiro consulta o \textit{NameNode}, que então diz de quais nós do cluster os blocos serão lidos, garantindo um balanceamento de carga na leitura. Arquivos criados no HDFS só podem ser modificados anexando conteúdo no final. Não pode-se modificar blocos já escritos. A falha do \textit{DataNode} implica na indisponibilidade de todo o HDFS e, por esse motivo, é importante mantê-lo resiliente a falha com mecanismos de redundância. Uma visão geral dessa arquitetura pode ser vista na figura \ref{fig:hdfs_arch}.
 
 \subsection{O ecossistema Hadoop}
-Atualmente o Hadoop conta com um ecossistema com diversos \textit{frameworks}. Uma lista, não exaustiva, de alguns dos principais projetos que compõem o ecossistema pode ser vista abaixo.
+
+Atualmente o Hadoop conta com um ecossistema com diversos \textit{frameworks}. Uma lista, não exaustiva, 
+de alguns dos principais projetos que compõem o ecossistema pode ser vista abaixo.
+
 \begin{itemize}
 	\item Ambari: Uma ferramenta web para aprovisionamento e gerenciamento de um cluster Hadoop e de diversos de seus componentes.
-	\item HBase: Um banco de dados relacional e colunar que utiliza a infraestrutura do Hadoop como mecanismo de armazenamento.
+	\item HBase: Um banco de dados não relacional (NoSQL) e colunar que utiliza a infraestrutura do Hadoop como mecanismo de armazenamento.
 	\item Hive: Uma infraestrutura de armazém de dados com suporte a sumarização de dados e consultas.
 	\item Pig: Uma linguagem de alto nível para fluxo de dados e um \textit{framework} de execução de computação distribuída. 
 	\item Spark: Uma \textit{engine} rápida e de propósito geral para processamento de dados em memória baseados nos dados do HDFS. O Spark oferece um modelo de programação simples e poderoso para executar uma enorme gama de atividades como ETL, aprendizagem de máquina, processamento contínuo de dados, processamento de grafos, etc.
@@ -60,26 +63,50 @@ Atualmente o Hadoop conta com um ecossistema com diversos \textit{frameworks}. U
 \end{itemize}
 
 \subsection{MapReduce}
-O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programas de computador para processar uma enorme quantidade de dados de forma paralela, distribuída e resiliente a falhas. Os dados de entrada para um \textit{Job} MapReduce, por estarem armazenados no HDFS, são também processados de forma distribuída, aproveitando dos dados disponíveis localmente em um nó do \textit{cluster}. Na \ref{fig:mapreduce} podemos ver um desenho esquemático de um \textit{Job} MapReduce, que  é, de forma resumida, composto por duas fases:
+
+O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programas de computador para 
+processar uma enorme quantidade de dados de forma paralela, distribuída e resiliente a falhas. Os dados 
+de entrada para um \textit{job} MapReduce, por estarem armazenados no HDFS, são também processados 
+de forma distribuída, aproveitando dos dados disponíveis localmente em um nó do \textit{cluster}. 
+Na Figura \ref{fig:mapreduce} podemos ver um desenho esquemático de um \textit{job} MapReduce, que é, 
+de forma resumida, composto por duas fases:
+
 \begin{enumerate}
-	\item Map - quando os dados são processados e produzem saídas como tuplas no formato (Chave, Valor); 
-	\item Reduce - quando as tuplas com mesma chave são agrupadas para alguma atividade de agregação.  
+	\item \textit{Map}: quando os dados são processados e produzem saídas como tuplas no formato 
+\{\emph{chave}, \emph{valor}\}; 
+	\item \textit{Reduce}: quando as tuplas com mesma \emph{chave} são agrupadas para alguma atividade 
+de agregação.  
 \end{enumerate}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{./Job_Mapreduce.jpg}
-	\caption{Um \textit{Job} MapReduce}
+	\caption{Um \textit{job} MapReduce}
 	\label{fig:mapreduce}
 \end{figure}
 
-Um exemplo bem simples para entender o MapReduce é um Job para contar a ocorrência de cada palavra em um texto. Na fase de Map, cada linha lida do arquivo é dividida em suas palavras que produzem uma saída (PalavraA, 1). Note que se uma palavra aparece duas vezes na mesma linha duas tuplas idênticas serão produzidas. Na faze de Reduce, as tuplas com mesma chave serão agrupadas e os valores serão somados. 
+Um exemplo bem simples para entender o MapReduce é um job para contar a ocorrência de cada palavra 
+em um texto. Na fase de \textit{Map}, cada linha lida do arquivo é dividida em suas palavras que 
+produzem uma saída \{PalavraA, 1\}. Note que se uma palavra aparece duas vezes na mesma linha duas 
+tuplas idênticas serão produzidas. Na faze de \textit{Reduce}, as tuplas com mesma chave serão 
+agrupadas e os valores $1$ serão somados. 
 
-Em geral, o programador não precisa se preocupar com comunicação de dados, tratamento de concorrência e eventuais falhas em algum nó que está processando um determinado \textit{Job}. Esse é um dos grandes diferenciais do Hadoop MapReduce. 
+Em geral, o programador não precisa se preocupar com comunicação de dados, tratamento de concorrência 
+e eventuais falhas em algum nó que está processando um determinado \textit{job}. Esse é um dos grandes 
+diferenciais do Hadoop MapReduce. 
 
-Uma possível solução para contagem de triângulos utilizando MapReduce, baseada na proposta feita por Suri e Sergei \cite{suri2011counting} envolve o encadeamento de 3 \textit{Jobs} MapReduce encadeados. O primeiro constrói um conjunto de todas as tríades (par de arestas que compartilham um vértice) de um grafo. Essas tríades, juntamente com as arestas originais são gerados como linhas, mas com um atributo identificador dizendo se é uma aresta original do arquivo ou se foi gerada pelo primeiro passo. Essa saída serve de entrada para o segundo \textit{Job}, que particiona XXX. Uma dessas partições conterá $n$ triângulos se ela contém uma aresta original e $n$ tríades. Um terceiro \textit{Job} counta o número de triângulos gerados pelo passo anterior e produz o resultado final. Vamos olhar um exemplo para melhor entendimento.
+Uma possível solução para contagem de triângulos utilizando MapReduce, baseada na proposta feita por 
+Suri e Sergei \cite{suri2011counting}, envolve o encadeamento de 3 \textit{jobs} MapReduce. O primeiro 
+constrói um conjunto de todas as tríades (par de arestas que compartilham um vértice) de um grafo. Essas 
+tríades, juntamente com as arestas originais são gerados como linhas, mas com um atributo identificador 
+dizendo se é uma aresta original do arquivo ou se foi gerada pelo primeiro passo. Essa saída serve de 
+entrada para o segundo \textit{job}, que conecta as tríades com as arestas originais, formando os 
+triângulos. Por fim, o terceiro \textit{job} conta o número de triângulos gerados pelo passo anterior. 
+Vamos olhar um exemplo para melhor entendimento.  
 
-Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os números identificam os nós e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: (Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Bianca, Marcelo).
+Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os números identificam 
+os nós e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: 
+(Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Bianca, Marcelo).
 
 \begin{table}[]
 \centering
@@ -101,7 +128,9 @@ Roberto      & Renato        \\ \hline
 \end{tabular}
 \end{table}
 
-Após a etapa de Map do primeiro \textit{Job}, são gerados um conjunto de (chave, valor) conforme a tabela \ref{map1}. Note que a chave é escolhida como o vértice de menor valor.
+Após a etapa de \textit{Map} do primeiro \textit{job}, são gerados um conjunto de 
+\{\textit{chave}, \textit{valor}\} conforme a tabela \ref{map1}. Note que a chave é escolhida como 
+o vértice de menor valor.
 
 \begin{table}[]
 \centering
@@ -124,7 +153,9 @@ Roberto     & Roberto, Renato  \\ \hline
 \end{tabular}
 \end{table}
 
-A etapa de Reduce do primeiro \textit{Job} é a mais importante. Nessa etapa, para cada chave da tabela \ref{map1}, são gerados as arestas originais (valor na tabela) e as tríades baseadas nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1}.
+A etapa de \textit{Reduce} do primeiro \textit{job} é a mais importante. Nessa etapa, para cada chave 
+da Tabela \ref{map1}, são gerados as arestas originais (valor na tabela) bem como as tríades baseadas 
+nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1}.
 
 \begin{table}[]
 \centering
@@ -153,14 +184,20 @@ A etapa de Reduce do primeiro \textit{Job} é a mais importante. Nessa etapa, pa
 \end{tabular}
 \end{table}
 
-O segundo \textit{Job} tem apenas a etapa de Reduce e toma de entrada o resultado produzido na tabela \ref{reduce1}. Para cada grupo de chaves (arestas), é verificado se há uma aresta original (Gerado = 0). Se sim, é verificada em quantas tríades essa aresta fecha um triângulo, emitindo uma contagem parcial para cada chave. Pelo nosso exemplo, podemos ver que isso ocorre nas chaves (Chico,Renato), (Lívia,Renato) e (Marcelo, Bianca), totalizando nossos 3 triângulos.
+O segundo \textit{job} tem apenas a etapa de \textit{Reduce} e toma de entrada o resultado produzido na 
+Tabela \ref{reduce1}. Para cada grupo de chaves (arestas), é verificado se há uma aresta original 
+(Gerado = 0). Se sim, é verificada em quantas tríades essa aresta fecha um triângulo, emitindo uma 
+contagem parcial para cada chave. Pelo nosso exemplo, podemos ver que isso ocorre nas chaves 
+(Chico, Renato), (Lívia, Renato) e (Marcelo, Bianca), totalizando nossos 3 triângulos.
 
-A última etapa (terceiro \textit{Job}) é uma tarefa trivial de somar as contagens parciais emitidas pelo passo anterior.
+A última etapa (terceiro \textit{Job}) é uma tarefa trivial de somar as contagens parciais emitidas 
+pelo passo anterior.
 
-These triads and the original edges are emitted as rows by the first MR job, with a field added to distinguish the two. Note that the output of the first job can be quite large, especially in a dense graph. Such output is consumed by the second MR job, which partitions the rows by either the unclosed edge, if the row is a triad, or the original edge. A partition has n triangles if it contains an original edge and n triads. A third, trivial MR job counts the triangles produced by the second job, to produce the final result.
+\subsection{Hive}
+
 
 \subsection{Pig}
-nessa seção vou explicar o mapreduce e como resolver o problema do triangulo
+
 
 \section{Apache Spark}
 O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito geral e muito eficiente \cite{karau2015learning}. A principal diferença em relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar em disco resultados intermediários. 
