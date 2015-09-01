@@ -114,7 +114,7 @@ os nós e cada linha uma aresta que liga esses vértices, podemos identificar 3 
 \centering
 \caption{Exemplo de grafo de entrada.}
 \label{grafoExemplo}
-\begin{tabular}{cc}
+\begin{tabular}{|c|c|}
 \hline
 {\bf Origem} & {\bf Destino} \\ \hline
 André        & Bernardo      \\ \hline
@@ -138,7 +138,7 @@ o vértice de menor valor.
 \centering
 \caption{Resultado da etapa de Map do primeiro \textit{Job}.}
 \label{map1}
-\begin{tabular}{cc}
+\begin{tabular}{|c|c|}
 
 \hline
 {\bf Chave} & {\bf Valor (arest)}      \\ \hline
@@ -163,26 +163,26 @@ nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1
 \centering
 \caption{Resultado da etapa de Reduce do primeiro \textit{Job}.}
 \label{reduce1}
-\begin{tabular}{ccc}
+\begin{tabular}{|c|c|c|}
 \hline
-{\bf Chave}                                                    & {\bf Gerado} & {\bf Tríades}                                                                         \\ \hline
-\begin{tabular}[c]{@{}c@{}}André,\\   Bernardo\end{tabular}    & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}André,\\   Marcelo\end{tabular}     & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}André,\\   Bianca\end{tabular}      & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Chico\end{tabular}    & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Bianca\end{tabular}   & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Bernardo\}, \{André,\\   Bianca\}\end{tabular}    \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Renato\end{tabular}   & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo, \\   Marcelo\end{tabular} & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Bernardo\}, \{André,\\   Marcelo\}\end{tabular}   \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Livia\end{tabular}       & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Roberto\end{tabular}     & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Renato\end{tabular}      & 1            & \begin{tabular}[c]{@{}c@{}}\{Bernardo, Chico\}, \{Bernardo,\\   Renato\}\end{tabular} \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Renato\end{tabular}      & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Livia,\\   Roberto\end{tabular}     & 1            & \{Chico, Livia\}, \{Chico, Roberto\}                                                  \\ \hline
-\begin{tabular}[c]{@{}c@{}}Livia,\\   Renato\end{tabular}      & 1            & \{Chico, Livia\}, \{Chico, Renato\}                                                   \\ \hline
-\begin{tabular}[c]{@{}c@{}}Marcelo,\\   Bianca\end{tabular}    & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Marcelo\}, \{André,\\   Bianca\}\end{tabular}     \\ \hline
-\begin{tabular}[c]{@{}c@{}}Marcelo,\\   Bianca\end{tabular}    & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Roberto,\\   Renato\end{tabular}    & 1            & \begin{tabular}[c]{@{}c@{}}\{Chico, Roberto\}, \{Chico,\\   Renato\}\end{tabular}     \\ \hline
-\begin{tabular}[c]{@{}c@{}}Roberto,\\   Renato\end{tabular}    & 0            &                                                                                       \\ \hline
+{\bf Chave}       & {\bf Gerado} & {\bf Tríades}                           \\ \hline
+André, Bernardo   & 0            &                                         \\ \hline
+André, Marcelo    & 0            &                                         \\ \hline
+André, Bianca     & 0            &                                         \\ \hline
+Bernardo, Chico   & 0            &                                         \\ \hline
+Bernardo, Bianca  & 1            & \{André,Bernardo\}, \{André,Bianca\}    \\ \hline
+Bernardo, Renato  & 0            &                                         \\ \hline
+Bernardo, Marcelo & 1            & \{André,Bernardo\}, \{André,Marcelo\}   \\ \hline
+Chico, Livia      & 0            &                                         \\ \hline
+Chico, Roberto    & 0            &                                         \\ \hline
+Chico, Renato     & 1            & \{Bernardo,Chico\}, \{Bernardo,Renato\} \\ \hline
+Chico, Renato     & 0            &                                         \\ \hline
+Livia, Roberto    & 1            & \{Chico, Livia\}, \{Chico, Roberto\}    \\ \hline
+Livia, Renato     & 1            & \{Chico, Livia\}, \{Chico, Renato\}     \\ \hline
+Marcelo, Bianca   & 1            & \{André,Marcelo\}, \{André,Bianca\}     \\ \hline
+Marcelo, Bianca   & 0            &                                         \\ \hline
+Roberto, Renato   & 1            & \{Chico,Roberto\}, \{Chico,Renato\}     \\ \hline
+Roberto, Renato   & 0            &                                         \\ \hline
 \end{tabular}
 \end{table}
 
@@ -319,6 +319,7 @@ do modelo de programação do Spark, o trecho de código abaixo lê um arquivo t
 ocorrência das palavras.
 
 \begin{lstlisting}[style=MyPythonStyle]
+
 #produz um RDD onde cada item e uma linha do arquivo texto
 arquivo = sc.textFile('hdfs://servidor:10001/arquivo.txt') 
 
@@ -333,6 +334,7 @@ contagemPalafras = palavrasCV.reduceByKey(add)
 
 #somente nesse comando toda a computacaoo e feita de forma otimizada.
 contagemPalavras.collect() 
+
 \end{lstlisting}
 
 Para resolver o problema de contagem de triângulos utilizando o Spark, a ideia é semelhante à usada com 
@@ -351,7 +353,9 @@ O esquema de dados de um \emph{DataFrame} pode ser inferido através de reflexã
 O trecho de código abaixo mostra como executar a contagem de triângulos utilizando o SQL proposto na 
 seção \ref{sec:triangulos}.
 
+
 \begin{lstlisting}[style=MyPythonStyle]
+
 # Importa os modulos e cria o contexto
 from pyspark.sql import SQLContext, Row
 sqlContext = SQLContext(sc)
@@ -369,6 +373,7 @@ schemaWiki.registerTempTable("arestas")
 triangulos = sqlContext.sql("SELECT count(*) FROM arestas R, arestas S, arestas T " +
     " WHERE R.follower = S.followee AND S.follower = T.followee AND T.follower = R.followee")
 print triangulos.collect()
+
 \end{lstlisting}
 
 
@@ -392,7 +397,9 @@ de componentes conectados e contagem de triângulos, que demonstramos o uso no t
 Comparado com as estratégias de MapReduce, a contagem de triângulos utilizando Spark GraphX é de 
 várias ordens de grandeza mais rápido e eficiente em consumo de memória. 
 
+
 \begin{lstlisting}[style=MyPythonStyle]
+
 # Carrega o grafo a partir de um arquivo cujas linhas sao pares de identificadores dos nos, definindo uma aresta
 val graph = GraphLoader.edgeListFile(sc, "graphx/data/followers.txt", true).partitionBy(PartitionStrategy.RandomVertexCut)
 
@@ -401,4 +408,5 @@ val triCounts = graph.triangleCount().vertices
 
 # imprime o resultado
 println(triCounts.mkString("\n"))
+
 \end{lstlisting}
