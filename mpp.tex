@@ -18,7 +18,7 @@ consultas para os nós específicos que devem processá-la. O problema
 geral desta abordagem é que existe a possibilidade de desbalanceamento
 de nós \emph{data skew}; e o particionamento por funções de hash é portanto também
 bastante utilizado, pois através de boas funções de hash é possível
-evitar este desbalanceamento..
+evitar este desbalanceamento.
 
 A arquitetura dos bancos de dados paralelos pode ser de compartilhamento 
 de memória (\emph{shared-memory}, onde a memória é compartilhada entre os
@@ -64,7 +64,7 @@ por função de hash (\emph{shuffle}).
 \end{figure}
 
 A solução do problema da contagem dos triângulos da Seção \ref{sec:triangulos} utilizando
-banco de dados paralelos não envolve mistérios, uma vez que tal tecnologia 
+banco de dados paralelos é a mesma utilizada em bancos de dados relacionais, uma vez que tal tecnologia 
 implementa a álgebra relacional e já mostramos na Seção \ref{sec:relacional}
 a consulta SQL que resolve o problema. Esta consulta envolve duas junções, 
 que serão executadas em paralelo, e as seleções de remoção de duplicatas que
