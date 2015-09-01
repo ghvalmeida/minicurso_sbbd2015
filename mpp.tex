@@ -41,3 +41,33 @@ compartilhamento.
         \label{fig:mpp_arq}
 \end{figure}
 
+Os operadores da álgebra relacional são todos paralelizáveis, principalmente
+a junção, com algoritmos de espalhamento dos dados por função de hash 
+\cite{Schneider1989}. A ideia principal destes algoritmos é a de que cada 
+nó lê sua parcela dos dados, aplica uma função de hash nos atributos da
+junção para determinar o nó de destino e envia os dados para os nós específicos.
+Desta forma, quando os nós agora recebem os dados, há a garantia (pela
+função de hash) de que os nós que irão participar do resultado da junção 
+estão fisicamente localizados juntos, neste passo. Cada nó então executa um
+algoritmo linear de junção, tipicamente uma junção por hash em memória,
+e reporta o resultado para o nó coletor. Este processo é demonstrado na 
+Figura \ref{fig:mpp_hashjoin}. Nesta figura, é mostrada uma arquitetura
+com quatro nós sem compartilhamento, e estes quatro nós estão replicados 
+em duas camadas para melhor mostrar a fase de espalhamento dos dados
+por função de hash (\emph{shuffle}).
+
+\begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{./mpp_hashjoin.png}
+        \caption{Junção por hash em um banco de dados paralelo sem compartilhamento.}
+        \label{fig:mpp_hashjoin}
+\end{figure}
+
+A solução do problema da contagem dos triângulos da Seção \ref{sec:triangulos} utilizando
+banco de dados paralelos não envolve mistérios, uma vez que tal tecnologia 
+implementa a álgebra relacional e já mostramos na Seção \ref{sec:relacional}
+a consulta SQL que resolve o problema. Esta consulta envolve duas junções, 
+que serão executadas em paralelo, e as seleções de remoção de duplicatas que
+serão aplicadas após as junções no fluxo de execução das consultas (\emph{pipeline}).
+
+
