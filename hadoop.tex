@@ -239,7 +239,8 @@ corresponde a um operador da álgebra relacional.
 O exemplo abaixo mostra a declaração da tabela do Twitter na linguagem Pig Latin.
 
 \begin{verbatim}
-Twitter = LOAD '/input/twitter' USING PigStorage(',') AS (follower: int, followee: int);
+Twitter = LOAD '/input/twitter' USING PigStorage(',') 
+  AS (follower: int, followee: int);
 \end{verbatim}
 
 Note que, diferentemente do Hive, o Pig Lating cria a tabela Twitter e ao mesmo tempo instancia 
@@ -248,14 +249,21 @@ a mesma lendo do arquivo de input com o formato especificado.
 O código abaixo executa a contagem dos triângulos, uma vez mapeada a tabela Twitter.
 
 \begin{verbatim}
-Twitter_1 = LOAD '/input/twitter' USING PigStorage(' ') AS (follower:int, followee:int);
-Twitter_2 = LOAD '/input/twitter' USING PigStorage(' ') AS (follower:int, followee:int);
-Twitter_3 = LOAD '/input/twitter' USING PigStorage(' ') AS (follower:int, followee:int);
+Twitter_1 = LOAD '/input/twitter' USING PigStorage(' ') 
+  AS (follower:int, followee:int);
+Twitter_2 = LOAD '/input/twitter' USING PigStorage(' ') 
+  AS (follower:int, followee:int);
+Twitter_3 = LOAD '/input/twitter' USING PigStorage(' ') 
+  AS (follower:int, followee:int);
 
-Twitter_SelfJoin = JOIN Twitter_1 by $1, Twitter_2 by $0;
-Twitter_FullJoin = JOIN Twitter_3 by ($1, $0), Twitter_SelfJoin by ($0, $3);
+Twitter_SelfJoin = JOIN Twitter_1 by $1, 
+                        Twitter_2 by $0;
 
-Triangles = FILTER Twitter_FullJoin BY ($0 < $1 AND $1 < $3) OR ($0 > $1 AND $1 > $3);
+Twitter_FullJoin = JOIN Twitter_3 by ($1, $0), 
+                        Twitter_SelfJoin by ($0, $3);
+
+Triangles = FILTER Twitter_FullJoin 
+  BY ($0 < $1 AND $1 < $3) OR ($0 > $1 AND $1 > $3);
 
 Triangles_Grp = GROUP Triangles ALL;
 Triangles_Cnt = FOREACH Triangles_Grp GENERATE COUNT(Triangles);
@@ -273,20 +281,41 @@ Somente a partir de um comando DUMP que o Pig começa a construir os \textit{job
 e executá-los.
 
 \section{Apache Spark}
-O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito geral e muito eficiente \cite{karau2015learning}. A principal diferença em relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar em disco resultados intermediários. 
 
-A unidade básica de dados do Spark é o \textit{Resilient Distributed Dataset} (RDD). O conceito é semelhante ao bloco de dados do HDFS, mas trata-se de coleções de dados que estão na memória RAM dos nós do \textit{cluster}. Na prática, o Spark carrega os dados de um bloco do HDFS na memória RAM do nó em que o bloco está. Os programas Spark fazem dois tipos de operação com um RDD:
+O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito 
+geral e muito eficiente \cite{zaharia2012resilient, karau2015learning}. A principal diferença em 
+relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar 
+em disco resultados intermediários. 
+
+A unidade básica de dados do Spark é o \textit{Resilient Distributed Dataset} (RDD). O conceito é 
+semelhante ao bloco de dados do HDFS, mas trata-se de coleções de dados que estão na memória RAM dos 
+nós do \textit{cluster}. Na prática, o Spark carrega os dados de um bloco do HDFS na memória RAM do nó 
+em que o bloco está. Os programas Spark fazem dois tipos de operação com um RDD:
+
 \begin{itemize}
-	\item \textbf{Transformações}: Transformam um RDD em outro RDD. Entre as transformações mais comuns podemos encontrar as operações de Map e ReduceByKey (mesmo conceito do MapReduce), ordenação e operações de conjuntos, como união, interseção e diferença.
-	\item \textbf{Ações}: Produzem algum resultado a partir de um RDD. Ações típicas consistem em enumerar alguma quantidade de itens de um RDD, contar e somar. 
+	\item \textbf{Transformações}: Transformam um RDD em outro RDD. Entre as transformações mais 
+comuns podemos encontrar as operações de \textit{Map} e \textit{ReduceByKey} (mesmo conceito do MapReduce), 
+ordenação e operações de conjuntos, como união, interseção e diferença.
+	\item \textbf{Ações}: Produzem algum resultado a partir de um RDD. Ações típicas consistem em 
+enumerar alguma quantidade de itens de um RDD, contar e somar. 
 \end{itemize}
 
-O Spark utiliza o conceito de "execução preguiçosa", para que só quando realmente um resultado tenha de ser produzido (uma \textbf{ação} é executada), e toda a sequência de passos necessária é conhecida, o Spark realmente lê os dados e faz cálculos na memória. Com isso, o motor de execução do Spark consegue otimizar tudo que será executado, escolhendo os melhores nós, a melhor sequência, etc.
+O Spark utiliza o conceito de \emph{execução preguiçosa}, para que só quando realmente um resultado 
+tenha de ser produzido (uma \textbf{ação} é executada), e toda a sequência de passos necessária é 
+conhecida, o Spark realmente lê os dados e faz cálculos na memória. Com isso, o motor de execução do 
+Spark consegue otimizar tudo que será executado, escolhendo os melhores nós, a melhor sequência, etc.
 
-O Apache Spark também vem com um conjunto de bibliotecas com algoritmos para aprendizado de máquina, grafos, fluxo contínuo de dados e SQL. Algumas dessas vermos a seguir.
+O Apache Spark também vem com um conjunto de bibliotecas com algoritmos para aprendizado de máquina, 
+grafos, fluxo contínuo de dados e SQL. Algumas dessas vermos a seguir.
 
 \subsection{Utilizando o console python}
-O Apache Spark possui consoles iterativos nas linguagens Python e Scala e seus \textit{Jobs} podem ser submetidos em batch também em Java. A API do Spark é acessada a partir de um objeto central denominado \texttt{ SparkContext }. Esse objeto contém a conexão com uma instância do cluster e a partir dele todos os outros objetos e métodos são acessados. Ao se iniciar um console do Spark, o objeto já está automaticamente disponível através da variável \texttt{ sc }. Para compreender a simplicidade do modelo de programação do Spark, o trecho de código abaixo lê um arquivo txt e faz a contagem de ocorrência das palavras.
+O Apache Spark possui consoles iterativos nas linguagens Python e Scala e seus \textit{jobs} podem 
+ser submetidos em batch também em Java. A API do Spark é acessada a partir de um objeto central 
+denominado \texttt{SparkContext}. Esse objeto contém a conexão com uma instância do cluster e a partir 
+dele todos os outros objetos e métodos são acessados. Ao se iniciar um console do Spark, o objeto já 
+está automaticamente disponível através da variável \texttt{sc}. Para compreender a simplicidade 
+do modelo de programação do Spark, o trecho de código abaixo lê um arquivo txt e faz a contagem de 
+ocorrência das palavras.
 
 \begin{lstlisting}[style=MyPythonStyle]
 #produz um RDD onde cada item e uma linha do arquivo texto
@@ -305,14 +334,21 @@ contagemPalafras = palavrasCV.reduceByKey(add)
 contagemPalavras.collect() 
 \end{lstlisting}
 
-Para resolver o problema de contagem de triângulos utilizando o Spark, a idéia é semelhante à usada com o modelo do MapReduce.
+Para resolver o problema de contagem de triângulos utilizando o Spark, a ideia é semelhante à usada com 
+o modelo do MapReduce.
 
 \subsection{Spark SQL}
-O Spark SQL é um módulo do Apache Spark para processamento de dados estruturados (relacionais). Ele utiliza uma abstração denominada DataFrame, e também serve como uma máquina de execução de consultas distribuídas baseada em SQL. 
+O Spark SQL \cite{xin2013shark, armbrust2015spark}, anteriormente chamado de Shark, é um módulo do Apache 
+Spark para processamento de dados estruturados (relacionais). Ele utiliza uma abstração denominada 
+\emph{DataFrame}, e também serve como uma máquina de execução de consultas distribuídas baseada em SQL. 
 
-Um DataFrame do Spark SQL tem as mesmas características de um DataFrame em R ou em Pandas (Python) e pode ser criado baseando-se em diversas fontes de dados, como um arquivo json, um arquivo texto, um RDD do Spark, uma tabela do Hive, ou qualquer fonte que possua um driver JDBC. O \textit{schema} de um DataFrame pode ser inferido através de reflexão ou definido programaticamente. 
+Um \emph{DataFrame} do Spark SQL tem as mesmas características de um \emph{DataFrame} em R ou em 
+Pandas (Python), e pode ser criado a partir de diversas fontes de dados, como um arquivo JSON, um 
+arquivo texto, um RDD do Spark, uma tabela do Hive, ou qualquer fonte que possua um driver JDBC. 
+O esquema de dados de um \emph{DataFrame} pode ser inferido através de reflexão ou programaticamente. 
 
-O trecho de código abaixo mostra como executar a contagem de triângulos utilizando o SQL proposto na seção \ref{sec:triangulos}.
+O trecho de código abaixo mostra como executar a contagem de triângulos utilizando o SQL proposto na 
+seção \ref{sec:triangulos}.
 
 \begin{lstlisting}[style=MyPythonStyle]
 # Importa os modulos e cria o contexto
@@ -336,11 +372,24 @@ print triangulos.collect()
 
 
 \subsection{Spark GraphX}
-O Spark GraphX é um novo módulo do Apache Spark que fornece um conjunto de abstrações e ferramentas para processamento paralelo de grafos. Nas abstrações de nós e arestas é possível incluir propriedades, como pesos, capacidades máximas e mínimas, ou qualquer outra propriedade que seja relevante para modelar um problema. 
 
-O Spark GraphX possui um conjunto de operações essenciais para diversos algoritmos de análise de grafos, como operações em paralelo sobre os nós/arcos dos grafos, obtenção de subgrafos, inversão de arestas e agregação de vizinhos. Esse último, por exemplo, pode ser usado para calcular o grau de cada vértice de um grafo. Mais detalhes desse módulo podem ser obtidos na documentação oficial do produto \footnote{http://spark.apache.org/docs/latest/graphx-programming-guide.html}. 
+O Spark GraphX é um novo módulo do Apache Spark que fornece um conjunto de abstrações e ferramentas 
+para processamento paralelo de algoritmos em grafos \cite{xin2013graphx}. Nas abstrações de 
+vértices e arestas é possível 
+incluir propriedades, como pesos, capacidades máximas e mínimas; ou qualquer outra propriedade que 
+seja relevante para modelar um problema. 
 
-Como é recente seu desenvolvimento, ainda são poucos os algoritmos implementados e a única linguagem suportada é o Scala. Atualmente conta com algoritmos de PageRank, Identificação de componentes conectados e contagem de triângulos, que demonstramos o uso no trecho de código abaixo. Comparado com as estratégias de MapReduce, a contagem de triângulos utilizando Spark GraphX é de várias ordens de grandeza mais rápido e eficiente em consumo de memória. 
+O Spark GraphX possui um conjunto de operações essenciais para diversos algoritmos de análise de grafos, 
+como operações em paralelo sobre os vértices/arestas dos grafos, obtenção de subgrafos, inversão de 
+arestas e agregação de vizinhos. Esse último, por exemplo, pode ser usado para calcular o grau de cada 
+vértice de um grafo. Mais detalhes desse módulo podem ser obtidos na documentação oficial do produto 
+\footnote{http://spark.apache.org/docs/latest/graphx-programming-guide.html}. 
+
+Como é recente seu desenvolvimento, ainda são poucos os algoritmos implementados e a única linguagem 
+suportada é o Scala. Atualmente conta com algoritmos de PageRanki \cite{brin2012reprint}, identificação 
+de componentes conectados e contagem de triângulos, que demonstramos o uso no trecho de código abaixo. 
+Comparado com as estratégias de MapReduce, a contagem de triângulos utilizando Spark GraphX é de 
+várias ordens de grandeza mais rápido e eficiente em consumo de memória. 
 
 \begin{lstlisting}[style=MyPythonStyle]
 # Carrega o grafo a partir de um arquivo cujas linhas sao pares de identificadores dos nos, definindo uma aresta
