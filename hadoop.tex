@@ -106,9 +106,9 @@ entrada para o segundo \textit{job}, que conecta as tríades com as arestas orig
 triângulos. Por fim, o terceiro \textit{job} conta o número de triângulos gerados pelo passo anterior. 
 Vamos olhar um exemplo para melhor entendimento.  
 
-Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os números identificam 
-os nós e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: 
-(Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Bianca, Marcelo).
+Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os nomes identificam 
+os vértices  e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: 
+(Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Tamara, Marcelo).
 
 \begin{table}[!htbp]
 \centering
@@ -119,20 +119,20 @@ os nós e cada linha uma aresta que liga esses vértices, podemos identificar 3 
 {\bf Origem} & {\bf Destino} \\ \hline
 André        & Bernardo      \\ \hline
 André        & Marcelo       \\ \hline
-André        & Bianca        \\ \hline
+André        & Tamara        \\ \hline
 Bernardo     & Chico         \\ \hline
 Bernardo     & Renato        \\ \hline
 Chico        & Renato        \\ \hline
 Chico        & Roberto       \\ \hline
 Chico        & Livia         \\ \hline
-Marcelo      & Bianca        \\ \hline
+Marcelo      & Tamara        \\ \hline
 Roberto      & Renato        \\ \hline      
 \end{tabular}
 \end{table}
 
 Após a etapa de \textit{Map} do primeiro \textit{job}, são gerados um conjunto de 
-\{\textit{chave}, \textit{valor}\} conforme a tabela \ref{map1}. Note que a chave é escolhida como 
-o vértice de menor valor.
+\{\textit{chave}, \textit{valor}\} conforme a tabela \ref{map1}. A chave é escolhida entre os vértices 
+da aresta, mas isso pode ocorrer de diversas maneiras. Para simplificar, usaremos o primeiro nome em ordem alfabética.
 
 \begin{table}[!htbp]
 \centering
@@ -143,9 +143,9 @@ o vértice de menor valor.
 \hline
 {\bf Chave} & {\bf Valor (arest)}      \\ \hline
 André       & André, Marcelo   \\ \hline
-André       & André, Bianca    \\ \hline
+André       & André, Tamara    \\ \hline
 André       & André, Bernardo  \\ \hline
-Marcelo     & Marcelo, Bianca  \\ \hline
+Marcelo     & Marcelo, Tamara  \\ \hline
 Bernardo    & Bernardo, Chico  \\ \hline
 Bernardo    & Bernardo, Renato \\ \hline
 Chico       & Chico, Roberto   \\ \hline
@@ -156,7 +156,7 @@ Roberto     & Roberto, Renato  \\ \hline
 \end{table}
 
 A etapa de \textit{Reduce} do primeiro \textit{job} é a mais importante. Nessa etapa, para cada chave 
-da Tabela \ref{map1}, são gerados as arestas originais (valor na tabela) bem como as tríades baseadas 
+da Tabela \ref{map1}, são gerados as arestas originais (valor na tabela \ref{map1}) bem como as tríades baseadas 
 nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1}.
 
 \begin{table}[!htbp]
@@ -168,9 +168,9 @@ nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1
 {\bf Chave}       & {\bf Gerado} & {\bf Tríades}                           \\ \hline
 André, Bernardo   & 0            &                                         \\ \hline
 André, Marcelo    & 0            &                                         \\ \hline
-André, Bianca     & 0            &                                         \\ \hline
+André, Tamara     & 0            &                                         \\ \hline
 Bernardo, Chico   & 0            &                                         \\ \hline
-Bernardo, Bianca  & 1            & \{André,Bernardo\}, \{André,Bianca\}    \\ \hline
+Bernardo, Tamara  & 1            & \{André,Bernardo\}, \{André,Tamara\}    \\ \hline
 Bernardo, Renato  & 0            &                                         \\ \hline
 Bernardo, Marcelo & 1            & \{André,Bernardo\}, \{André,Marcelo\}   \\ \hline
 Chico, Livia      & 0            &                                         \\ \hline
@@ -179,8 +179,8 @@ Chico, Renato     & 1            & \{Bernardo,Chico\}, \{Bernardo,Renato\} \\ \h
 Chico, Renato     & 0            &                                         \\ \hline
 Livia, Roberto    & 1            & \{Chico, Livia\}, \{Chico, Roberto\}    \\ \hline
 Livia, Renato     & 1            & \{Chico, Livia\}, \{Chico, Renato\}     \\ \hline
-Marcelo, Bianca   & 1            & \{André,Marcelo\}, \{André,Bianca\}     \\ \hline
-Marcelo, Bianca   & 0            &                                         \\ \hline
+Marcelo, Tamara   & 1            & \{André,Marcelo\}, \{André,Tamara\}     \\ \hline
+Marcelo, Tamara   & 0            &                                         \\ \hline
 Roberto, Renato   & 1            & \{Chico,Roberto\}, \{Chico,Renato\}     \\ \hline
 Roberto, Renato   & 0            &                                         \\ \hline
 \end{tabular}
@@ -190,7 +190,7 @@ O segundo \textit{job} tem apenas a etapa de \textit{Reduce} e toma de entrada o
 Tabela \ref{reduce1}. Para cada grupo de chaves (arestas), é verificado se há uma aresta original 
 (Gerado = 0). Se sim, é verificada em quantas tríades essa aresta fecha um triângulo, emitindo uma 
 contagem parcial para cada chave. Pelo nosso exemplo, podemos ver que isso ocorre nas chaves 
-(Chico, Renato), (Lívia, Renato) e (Marcelo, Bianca), totalizando nossos 3 triângulos.
+(Chico, Renato), (Roberto, Renato) e (Marcelo, Tamara), totalizando nossos 3 triângulos.
 
 A última etapa (terceiro \textit{Job}) é uma tarefa trivial de somar as contagens parciais emitidas 
 pelo passo anterior.
