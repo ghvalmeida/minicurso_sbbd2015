@@ -18,7 +18,7 @@ de agrupamento é a média dos coeficientes de cada vértice do grafo; altos val
 significam uma comunidade coesa (\emph{small world community}).
 
 Implementações de algoritmos eficientes para este problema abundam na literatura. O Algoritmo 
-\ref{alg:inmemorytrianglecounting}, adapdado de \cite{Chu2012} para retornar somente a contagem de 
+\ref{alg:inmemorytrianglecounting}, adapdado de \citep{Chu2012} para retornar somente a contagem de 
 triângulos, apresenta uma execução eficiente para o problema, e é a base para as principais 
 implementações de algoritmos que assumem que os dados cabem na memória. 
 
@@ -63,9 +63,9 @@ mostra quantos vértices possuem tal grau.
 \end{figure}
 
 Nos exemplos que iremos demonstrar durante a execução deste minicurso, serão utilizados dois conjuntos
-de dados, que foram utilizados por Leskovec et al. \cite{leskovec2012learning} e encontram-se 
+de dados, que foram utilizados por Leskovec et al. \citep{leskovec2012learning} e encontram-se 
 disponibilizados pelo Projeto SNAP (\textit{Stanford Network Analyst Project}), contendo
-usuários do Facebook e do Twitter, com estatísticas descritas na Tabela \ref{tab:datasets}.
+usuários do Facebook e do Twitter, com estatísticas descritas na Tabela \ref{datasets}.
 Deve-se atentar para o fato de que o Twitter e o Facebook possuem políticas diferentes; no Twitter
 é possível que um usuário siga algum outro sem que este também o siga de volta, enquanto que
 no Facebook a contrapartida é exigida. Isto torna o grafo do Twitter direcionado e o do Facebook
@@ -75,6 +75,7 @@ necessário duplicar os dados do Facebook, criando a volta de cada ligação ou 
 \begin{table}[!htbp]
 \caption{Estatísticas dos conjuntos de redes sociais (Facebook e Twitter) utilizados.}
 \centering
+\label{datasets}
 \begin{tabular}{l|l|l}
 \hline
 \hline
