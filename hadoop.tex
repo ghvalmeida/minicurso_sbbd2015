@@ -8,12 +8,12 @@ desafio que Mike Cafarella e Doug Cutting resolveram desenvolver o Apache Nutch.
 \textit{crawler} e a máquina de busca ficaram prontos, mas eles perceberam que a arquitetura não 
 escalaria para criar um índice de mais de um bilhão de páginas da Internet. Na mesma época, a equipe 
 do Google publicou um artigo que explicava a arquitetura do GFS (Google FileSystem) 
-\cite{ghemawat2003google}, que era um sistema de arquivos distribuído usado em sua máquina de busca. 
+\citep{ghemawat2003google}, que era um sistema de arquivos distribuído usado em sua máquina de busca. 
 Doug e Mike decidiram criar uma implementação \textit{open source} dessa arquitetura e a chamaram 
 de NDFS (Nutch Distributed FileSystem).
 
 Em 2004, a equipe do Google publicou novo artigo agora detalhando como era possível criar um índice de 
-toda a Internet usando o mecanismo de processamento paralelo denominado MapReduce \cite{dean2008mapreduce}. 
+toda a Internet usando o mecanismo de processamento paralelo denominado MapReduce \citep{dean2008mapreduce}. 
 Com base nesse trabalho, os desenvolvedores do Nutch migraram a maior parte de seus algoritmos para 
 executar sobre o MapReduce e o NDFS. Mais tarde, Doug Cutting foi trabalhar no Yahoo! liderando uma 
 equipe que construiu a nova geração de máquina de busca deles. Depois, o NDFS (posteriormente chamado
@@ -39,7 +39,7 @@ nós de um \textit{cluster} HDFS. Quando um disco ou um dos nós do \textit{clus
 poder ser lido de outro nó, o sistema de arquivos automaticamente recria os blocos presentes naquele disco 
 em outros nós do \textit{cluster}.
 
-\begin{figure}
+\begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=\linewidth]{./Arquitetura_HDFS.jpg}
 	\caption{Visão geral da arquitetura do HDFS}
@@ -80,7 +80,7 @@ de forma resumida, composto por duas fases:
 de agregação.  
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=\linewidth]{./Job_Mapreduce.jpg}
 	\caption{Um \textit{job} MapReduce}
@@ -98,7 +98,7 @@ e eventuais falhas em algum nó que está processando um determinado \textit{job
 diferenciais do Hadoop MapReduce. 
 
 Uma possível solução para contagem de triângulos utilizando MapReduce, baseada na proposta feita por 
-Suri e Sergei \cite{suri2011counting}, envolve o encadeamento de 3 \textit{jobs} MapReduce. O primeiro 
+Suri e Sergei \citep{suri2011counting}, envolve o encadeamento de 3 \textit{jobs} MapReduce. O primeiro 
 constrói um conjunto de todas as tríades (par de arestas que compartilham um vértice) de um grafo. Essas 
 tríades, juntamente com as arestas originais são gerados como linhas, mas com um atributo identificador 
 dizendo se é uma aresta original do arquivo ou se foi gerada pelo primeiro passo. Essa saída serve de 
@@ -106,46 +106,46 @@ entrada para o segundo \textit{job}, que conecta as tríades com as arestas orig
 triângulos. Por fim, o terceiro \textit{job} conta o número de triângulos gerados pelo passo anterior. 
 Vamos olhar um exemplo para melhor entendimento.  
 
-Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os números identificam 
-os nós e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: 
-(Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Bianca, Marcelo).
+Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os nomes identificam 
+os vértices  e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: 
+(Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Tamara, Marcelo).
 
-\begin{table}[]
+\begin{table}[!htbp]
 \centering
 \caption{Exemplo de grafo de entrada.}
 \label{grafoExemplo}
-\begin{tabular}{cc}
+\begin{tabular}{|c|c|}
 \hline
 {\bf Origem} & {\bf Destino} \\ \hline
 André        & Bernardo      \\ \hline
 André        & Marcelo       \\ \hline
-André        & Bianca        \\ \hline
+André        & Tamara        \\ \hline
 Bernardo     & Chico         \\ \hline
 Bernardo     & Renato        \\ \hline
 Chico        & Renato        \\ \hline
 Chico        & Roberto       \\ \hline
 Chico        & Livia         \\ \hline
-Marcelo      & Bianca        \\ \hline
+Marcelo      & Tamara        \\ \hline
 Roberto      & Renato        \\ \hline      
 \end{tabular}
 \end{table}
 
 Após a etapa de \textit{Map} do primeiro \textit{job}, são gerados um conjunto de 
-\{\textit{chave}, \textit{valor}\} conforme a tabela \ref{map1}. Note que a chave é escolhida como 
-o vértice de menor valor.
+\{\textit{chave}, \textit{valor}\} conforme a tabela \ref{map1}. A chave é escolhida entre os vértices 
+da aresta, mas isso pode ocorrer de diversas maneiras. Para simplificar, usaremos o primeiro nome em ordem alfabética.
 
-\begin{table}[]
+\begin{table}[!htbp]
 \centering
 \caption{Resultado da etapa de Map do primeiro \textit{Job}.}
 \label{map1}
-\begin{tabular}{cc}
+\begin{tabular}{|c|c|}
 
 \hline
 {\bf Chave} & {\bf Valor (arest)}      \\ \hline
 André       & André, Marcelo   \\ \hline
-André       & André, Bianca    \\ \hline
+André       & André, Tamara    \\ \hline
 André       & André, Bernardo  \\ \hline
-Marcelo     & Marcelo, Bianca  \\ \hline
+Marcelo     & Marcelo, Tamara  \\ \hline
 Bernardo    & Bernardo, Chico  \\ \hline
 Bernardo    & Bernardo, Renato \\ \hline
 Chico       & Chico, Roberto   \\ \hline
@@ -156,33 +156,33 @@ Roberto     & Roberto, Renato  \\ \hline
 \end{table}
 
 A etapa de \textit{Reduce} do primeiro \textit{job} é a mais importante. Nessa etapa, para cada chave 
-da Tabela \ref{map1}, são gerados as arestas originais (valor na tabela) bem como as tríades baseadas 
+da Tabela \ref{map1}, são gerados as arestas originais (valor na tabela \ref{map1}) bem como as tríades baseadas 
 nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1}.
 
-\begin{table}[]
+\begin{table}[!htbp]
 \centering
 \caption{Resultado da etapa de Reduce do primeiro \textit{Job}.}
 \label{reduce1}
-\begin{tabular}{ccc}
+\begin{tabular}{|c|c|c|}
 \hline
-{\bf Chave}                                                    & {\bf Gerado} & {\bf Tríades}                                                                         \\ \hline
-\begin{tabular}[c]{@{}c@{}}André,\\   Bernardo\end{tabular}    & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}André,\\   Marcelo\end{tabular}     & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}André,\\   Bianca\end{tabular}      & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Chico\end{tabular}    & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Bianca\end{tabular}   & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Bernardo\}, \{André,\\   Bianca\}\end{tabular}    \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo,\\   Renato\end{tabular}   & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Bernardo, \\   Marcelo\end{tabular} & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Bernardo\}, \{André,\\   Marcelo\}\end{tabular}   \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Livia\end{tabular}       & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Roberto\end{tabular}     & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Renato\end{tabular}      & 1            & \begin{tabular}[c]{@{}c@{}}\{Bernardo, Chico\}, \{Bernardo,\\   Renato\}\end{tabular} \\ \hline
-\begin{tabular}[c]{@{}c@{}}Chico,\\   Renato\end{tabular}      & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Livia,\\   Roberto\end{tabular}     & 1            & \{Chico, Livia\}, \{Chico, Roberto\}                                                  \\ \hline
-\begin{tabular}[c]{@{}c@{}}Livia,\\   Renato\end{tabular}      & 1            & \{Chico, Livia\}, \{Chico, Renato\}                                                   \\ \hline
-\begin{tabular}[c]{@{}c@{}}Marcelo,\\   Bianca\end{tabular}    & 1            & \begin{tabular}[c]{@{}c@{}}\{André, Marcelo\}, \{André,\\   Bianca\}\end{tabular}     \\ \hline
-\begin{tabular}[c]{@{}c@{}}Marcelo,\\   Bianca\end{tabular}    & 0            &                                                                                       \\ \hline
-\begin{tabular}[c]{@{}c@{}}Roberto,\\   Renato\end{tabular}    & 1            & \begin{tabular}[c]{@{}c@{}}\{Chico, Roberto\}, \{Chico,\\   Renato\}\end{tabular}     \\ \hline
-\begin{tabular}[c]{@{}c@{}}Roberto,\\   Renato\end{tabular}    & 0            &                                                                                       \\ \hline
+{\bf Chave}       & {\bf Gerado} & {\bf Tríades}                           \\ \hline
+André, Bernardo   & 0            &                                         \\ \hline
+André, Marcelo    & 0            &                                         \\ \hline
+André, Tamara     & 0            &                                         \\ \hline
+Bernardo, Chico   & 0            &                                         \\ \hline
+Bernardo, Tamara  & 1            & \{André,Bernardo\}, \{André,Tamara\}    \\ \hline
+Bernardo, Renato  & 0            &                                         \\ \hline
+Bernardo, Marcelo & 1            & \{André,Bernardo\}, \{André,Marcelo\}   \\ \hline
+Chico, Livia      & 0            &                                         \\ \hline
+Chico, Roberto    & 0            &                                         \\ \hline
+Chico, Renato     & 1            & \{Bernardo,Chico\}, \{Bernardo,Renato\} \\ \hline
+Chico, Renato     & 0            &                                         \\ \hline
+Livia, Roberto    & 1            & \{Chico, Livia\}, \{Chico, Roberto\}    \\ \hline
+Livia, Renato     & 1            & \{Chico, Livia\}, \{Chico, Renato\}     \\ \hline
+Marcelo, Tamara   & 1            & \{André,Marcelo\}, \{André,Tamara\}     \\ \hline
+Marcelo, Tamara   & 0            &                                         \\ \hline
+Roberto, Renato   & 1            & \{Chico,Roberto\}, \{Chico,Renato\}     \\ \hline
+Roberto, Renato   & 0            &                                         \\ \hline
 \end{tabular}
 \end{table}
 
@@ -190,7 +190,7 @@ O segundo \textit{job} tem apenas a etapa de \textit{Reduce} e toma de entrada o
 Tabela \ref{reduce1}. Para cada grupo de chaves (arestas), é verificado se há uma aresta original 
 (Gerado = 0). Se sim, é verificada em quantas tríades essa aresta fecha um triângulo, emitindo uma 
 contagem parcial para cada chave. Pelo nosso exemplo, podemos ver que isso ocorre nas chaves 
-(Chico, Renato), (Lívia, Renato) e (Marcelo, Bianca), totalizando nossos 3 triângulos.
+(Chico, Renato), (Roberto, Renato) e (Marcelo, Tamara), totalizando nossos 3 triângulos.
 
 A última etapa (terceiro \textit{Job}) é uma tarefa trivial de somar as contagens parciais emitidas 
 pelo passo anterior.
@@ -202,7 +202,7 @@ utilizado e desenvolvido em uma linguagem de programação, e.g. Java, com as co
 um desenvolvimento de software em linguagens de computação. Assim surgiu rapidamente a necessidade de 
 especificação de programas MapReduce em linguagens declarativas de alto nível.
 
-O Hive \cite{thusoo2009hive} é então uma das iniciativas neste sentido, sendo uma especificação de 
+O Hive \citep{thusoo2009hive} é então uma das iniciativas neste sentido, sendo uma especificação de 
 \textit{jobs} MapReduce em linguagem similar ao SQL: o HiveQL. O Hive foi inicialmente desenvolvido 
 pelo Facebook e atualmente seus principais contribuidores são o próprio Facebook e o Netflix.
 
@@ -229,7 +229,7 @@ compilados e executados sob demanda.
 
 \subsection{Pig}
 
-De forma similar ao Hive, o Yahoo! criou o Pig \cite{olston2008pig} em 2006 e o moveu como um projeto 
+De forma similar ao Hive, o Yahoo! criou o Pig \citep{olston2008pig} em 2006 e o moveu como um projeto 
 para o Hadoop em 2007, com o intuito de simplificar o desenvolvimento de \textit{jobs} MapReduce 
 através de uma linguagem procedural de alto nível (Pig Latin).
 
@@ -250,26 +250,26 @@ a mesma lendo do arquivo de input com o formato especificado.
 O código abaixo executa a contagem dos triângulos, uma vez mapeada a tabela Twitter.
 
 \begin{verbatim}
-Twitter_1 = LOAD '/input/twitter' USING PigStorage(' ') 
-  AS (follower:int, followee:int);
-Twitter_2 = LOAD '/input/twitter' USING PigStorage(' ') 
-  AS (follower:int, followee:int);
-Twitter_3 = LOAD '/input/twitter' USING PigStorage(' ') 
-  AS (follower:int, followee:int);
-
-Twitter_SelfJoin = JOIN Twitter_1 by $1, 
-                        Twitter_2 by $0;
-
-Twitter_FullJoin = JOIN Twitter_3 by ($1, $0), 
-                        Twitter_SelfJoin by ($0, $3);
-
-Triangles = FILTER Twitter_FullJoin 
-  BY ($0 < $1 AND $1 < $3) OR ($0 > $1 AND $1 > $3);
-
-Triangles_Grp = GROUP Triangles ALL;
-Triangles_Cnt = FOREACH Triangles_Grp GENERATE COUNT(Triangles);
-
-DUMP Triangles_Cnt;
+    Twitter_1 = LOAD '/input/twitter' USING PigStorage(' ') 
+      AS (follower:int, followee:int);
+    Twitter_2 = LOAD '/input/twitter' USING PigStorage(' ') 
+      AS (follower:int, followee:int);
+    Twitter_3 = LOAD '/input/twitter' USING PigStorage(' ') 
+      AS (follower:int, followee:int);
+    
+    Twitter_SelfJoin = JOIN Twitter_1 by $1, 
+                            Twitter_2 by $0;
+    
+    Twitter_FullJoin = JOIN Twitter_3 by ($1, $0), 
+                            Twitter_SelfJoin by ($0, $3);
+    
+    Triangles = FILTER Twitter_FullJoin 
+      BY ($0 < $1 AND $1 < $3) OR ($0 > $1 AND $1 > $3);
+    
+    Triangles_Grp = GROUP Triangles ALL;
+    Triangles_Cnt = FOREACH Triangles_Grp GENERATE COUNT(Triangles);
+    
+    DUMP Triangles_Cnt;
 \end{verbatim}
 
 As três primeiras linhas atribuem as tabelas Twitter\_1, Twitter\_2 e Twitter\_3. Esta atribuição 
@@ -284,7 +284,7 @@ e executá-los.
 \section{Apache Spark}
 
 O Apache Spark é uma plataforma para computação distribuída que foi projetada para ser de propósito 
-geral e muito eficiente \cite{zaharia2012resilient, karau2015learning}. A principal diferença em 
+geral e muito eficiente \citep{zaharia2012resilient, karau2015learning}. A principal diferença em 
 relação ao MapReduce é que toda a computação é feita e armazenada em memória, sem necessidade de salvar 
 em disco resultados intermediários. 
 
@@ -319,6 +319,7 @@ do modelo de programação do Spark, o trecho de código abaixo lê um arquivo t
 ocorrência das palavras.
 
 \begin{lstlisting}[style=MyPythonStyle]
+
 #produz um RDD onde cada item e uma linha do arquivo texto
 arquivo = sc.textFile('hdfs://servidor:10001/arquivo.txt') 
 
@@ -333,13 +334,14 @@ contagemPalafras = palavrasCV.reduceByKey(add)
 
 #somente nesse comando toda a computacaoo e feita de forma otimizada.
 contagemPalavras.collect() 
+
 \end{lstlisting}
 
 Para resolver o problema de contagem de triângulos utilizando o Spark, a ideia é semelhante à usada com 
 o modelo do MapReduce.
 
 \subsection{Spark SQL}
-O Spark SQL \cite{xin2013shark, armbrust2015spark}, anteriormente chamado de Shark, é um módulo do Apache 
+O Spark SQL \citep{xin2013shark, armbrust2015spark}, anteriormente chamado de Shark, é um módulo do Apache 
 Spark para processamento de dados estruturados (relacionais). Ele utiliza uma abstração denominada 
 \emph{DataFrame}, e também serve como uma máquina de execução de consultas distribuídas baseada em SQL. 
 
@@ -351,7 +353,9 @@ O esquema de dados de um \emph{DataFrame} pode ser inferido através de reflexã
 O trecho de código abaixo mostra como executar a contagem de triângulos utilizando o SQL proposto na 
 seção \ref{sec:triangulos}.
 
+
 \begin{lstlisting}[style=MyPythonStyle]
+
 # Importa os modulos e cria o contexto
 from pyspark.sql import SQLContext, Row
 sqlContext = SQLContext(sc)
@@ -369,13 +373,14 @@ schemaWiki.registerTempTable("arestas")
 triangulos = sqlContext.sql("SELECT count(*) FROM arestas R, arestas S, arestas T " +
     " WHERE R.follower = S.followee AND S.follower = T.followee AND T.follower = R.followee")
 print triangulos.collect()
+
 \end{lstlisting}
 
 
 \subsection{Spark GraphX}
 
 O Spark GraphX é um novo módulo do Apache Spark que fornece um conjunto de abstrações e ferramentas 
-para processamento paralelo de algoritmos em grafos \cite{xin2013graphx}. Nas abstrações de 
+para processamento paralelo de algoritmos em grafos \citep{xin2013graphx}. Nas abstrações de 
 vértices e arestas é possível 
 incluir propriedades, como pesos, capacidades máximas e mínimas; ou qualquer outra propriedade que 
 seja relevante para modelar um problema. 
@@ -387,12 +392,14 @@ vértice de um grafo. Mais detalhes desse módulo podem ser obtidos na documenta
 \footnote{http://spark.apache.org/docs/latest/graphx-programming-guide.html}. 
 
 Como é recente seu desenvolvimento, ainda são poucos os algoritmos implementados e a única linguagem 
-suportada é o Scala. Atualmente conta com algoritmos de PageRanki \cite{brin2012reprint}, identificação 
+suportada é o Scala. Atualmente conta com algoritmos de PageRanki \citep{brin2012reprint}, identificação 
 de componentes conectados e contagem de triângulos, que demonstramos o uso no trecho de código abaixo. 
 Comparado com as estratégias de MapReduce, a contagem de triângulos utilizando Spark GraphX é de 
 várias ordens de grandeza mais rápido e eficiente em consumo de memória. 
 
+
 \begin{lstlisting}[style=MyPythonStyle]
+
 # Carrega o grafo a partir de um arquivo cujas linhas sao pares de identificadores dos nos, definindo uma aresta
 val graph = GraphLoader.edgeListFile(sc, "graphx/data/followers.txt", true).partitionBy(PartitionStrategy.RandomVertexCut)
 
@@ -401,4 +408,5 @@ val triCounts = graph.triangleCount().vertices
 
 # imprime o resultado
 println(triCounts.mkString("\n"))
+
 \end{lstlisting}

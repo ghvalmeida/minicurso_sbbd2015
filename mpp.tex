@@ -4,7 +4,7 @@
 Bancos de dados paralelos ou massivamente paralelos (MPP, do inglês 
 \emph{massively parallel processing}) também não são tecnologia 
 recente, discussões sobre esse assunto e implementações de sistemas
-datam da década de 80-90 \cite{Dewitt1992, Fushimi1986}. Nestes 
+datam da década de 80-90 \citep{Dewitt1992, Fushimi1986}. Nestes 
 sistemas, os dados das tabelas são distribuídos em diversos 
 nós de um cluster e o processamento de consulta é paralelizado.
 
@@ -30,12 +30,12 @@ cada nó possui sua própria memória e disco e o compartilhamento de dados
 entre nós do cluster se faz através de transferência por mensagens. As 
 arquiteturas com compartilhamento (\emph{shared-memory} e \emph{shared-disk})
 se mostraram ineficientes em escalabilidade para grandes implantações
-\cite{Dewitt1992, Stonebraker1986}. A Figura \ref{fig:mpp_arq} mostra
+\citep{Dewitt1992, Stonebraker1986}. A Figura \ref{fig:mpp_arq} mostra
 um banco de dados paralelo com um nó mestre e arquitetura sem 
 compartilhamento.
 
 
-\begin{figure}
+\begin{figure}[!htbp]
         \centering
         \includegraphics[width=\linewidth]{./mpp_database.png}
         \caption{Banco de dados paralelo e a arquitetura sem compartilhamento.}
@@ -44,7 +44,7 @@ compartilhamento.
 
 Os operadores da álgebra relacional são todos paralelizáveis, principalmente
 a junção, com algoritmos de espalhamento dos dados por função de hash 
-\cite{Schneider1989}. A ideia principal destes algoritmos é a de que cada 
+\citep{Schneider1989}. A ideia principal destes algoritmos é a de que cada 
 nó lê sua parcela dos dados, aplica uma função de hash nos atributos da
 junção para determinar o nó de destino e envia os dados para os nós específicos.
 Desta forma, quando os nós agora recebem os dados, há a garantia (pela
@@ -57,7 +57,7 @@ com quatro nós sem compartilhamento, e estes quatro nós estão replicados
 em duas camadas para melhor mostrar a fase de espalhamento dos dados
 por função de hash (\emph{shuffle}).
 
-\begin{figure}
+\begin{figure}[!htbp]
         \centering
         \includegraphics[width=\linewidth]{./mpp_hashjoin.png}
         \caption{Junção por hash em um banco de dados paralelo sem compartilhamento.}

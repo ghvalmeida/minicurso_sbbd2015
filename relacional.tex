@@ -2,15 +2,15 @@
 \label{sec:relacional}
 
 Bancos de dados relacionais são sistemas que implementam o modelo de dados
-relacional proposto por Codd na década de 70 \cite{Codd1970}, rapidamente
-implementado por um sistema chamado System R da IBM \cite{Astrahan1976}.
+relacional proposto por Codd na década de 70 \citep{Codd1970}, rapidamente
+implementado por um sistema chamado System R da IBM \citep{Astrahan1976}.
 A principal ideia é a de representar os dados em forma de relações (tabelas)
 e as operações são definidas a partir de uma álgebra: a álgebra relacional.
 O sistema recebe comandos através de uma linguagem declarativa (SQL) 
-\cite{Chamberlin1974}, os converte em operadores da álgebra relacional
+\citep{Chamberlin1974}, os converte em operadores da álgebra relacional
 para então poder ser executada nos dados persistentes nas relações.
 
-\begin{figure}
+\begin{figure}[!htbp]
         \centering
         \includegraphics[width=0.8\linewidth]{./colunar_repr_tabela.png}
         \caption{Representação de uma tabela em um banco de dados relacional.}
@@ -61,7 +61,7 @@ ser executada nas seguintes ordens: (i) $R \bowtie S \bowtie T$, (ii)
 $R \bowtie T \bowtie S$ e (iii) $S \bowtie T \bowtie R$. Adicionalmente, existem
 inúmeros algoritmos para a execução eficiente das junções que devem coexistir no
 sistema e serem utilizados em circunstâncias em que são os mais eficientes 
-\cite{Mishra1992}.
+\citep{Mishra1992}.
 
 O problema da contagem de triângulos da Seção \ref{sec:triangulos} pode ser expresso na 
 seguinte consulta SQL, assumindo que temos uma relação chamada Twitter com os attributos
