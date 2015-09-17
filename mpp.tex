@@ -2,11 +2,11 @@
 \label{sec:mpp}
 
 Bancos de dados paralelos ou massivamente paralelos (MPP, do inglês 
-\emph{massively parallel processing}) também não são tecnologia 
-recente, discussões sobre esse assunto e implementações de sistemas
+\emph{massively parallel processing}) também não são tecnologias 
+recentes, discussões sobre esse assunto e implementações de sistemas
 datam da década de 80-90 \citep{Dewitt1992, Fushimi1986}. Nestes 
 sistemas, os dados das tabelas são distribuídos em diversos 
-nós de um cluster e o processamento de consulta é paralelizado.
+nós de um cluster e o processamento da consulta é paralelizado.
 
 Os dados podem ser distribuídos através de particionamento vertical,
 onde as tabelas são quebradas por colunas; horizontal, onde as 
@@ -17,7 +17,7 @@ e o otimizador de consultas, nestes casos, conhecendo a forma
 como os dados estão distribuídos, pode repassar a parte das
 consultas para os nós específicos que devem processá-la. O problema
 geral desta abordagem é que existe a possibilidade de desbalanceamento
-de nós \emph{data skew}; e o particionamento por funções de hash é portanto também
+de nós (\emph{data skew}). O particionamento dos dados por funções de hash é 
 bastante utilizado, pois através de boas funções de hash é possível
 evitar este desbalanceamento.
 
@@ -29,7 +29,7 @@ entre todos os nós; ou sem compartilhamento (\emph{shared-nothing}), onde
 cada nó possui sua própria memória e disco e o compartilhamento de dados
 entre nós do cluster se faz através de transferência por mensagens. As 
 arquiteturas com compartilhamento (\emph{shared-memory} e \emph{shared-disk})
-se mostraram ineficientes em escalabilidade para grandes implantações
+mostraram-se ineficientes em escalabilidade para grandes implantações
 \citep{Dewitt1992, Stonebraker1986}. A Figura \ref{fig:mpp_arq} mostra
 um banco de dados paralelo com um nó mestre e arquitetura sem 
 compartilhamento.
@@ -43,11 +43,11 @@ compartilhamento.
 \end{figure}
 
 Os operadores da álgebra relacional são todos paralelizáveis, principalmente
-a junção, com algoritmos de espalhamento dos dados por função de hash 
+a junção, com algoritmos de distribuição dos dados por função hash 
 \citep{Schneider1989}. A ideia principal destes algoritmos é a de que cada 
-nó lê sua parcela dos dados, aplica uma função de hash nos atributos da
+nó lê sua parcela dos dados, aplica uma função hash nos atributos da
 junção para determinar o nó de destino e envia os dados para os nós específicos.
-Desta forma, quando os nós agora recebem os dados, há a garantia (pela
+Desta forma, quando os nós recebem os dados, há a garantia (pela
 função de hash) de que os nós que irão participar do resultado da junção 
 estão fisicamente localizados juntos, neste passo. Cada nó então executa um
 algoritmo linear de junção, tipicamente uma junção por hash em memória,
@@ -64,14 +64,14 @@ por função de hash (\emph{shuffle}).
         \label{fig:mpp_hashjoin}
 \end{figure}
 
-A solução do problema da contagem dos triângulos da Seção \ref{sec:triangulos} utilizando
+A solução do problema da contagem dos triângulos apresentada na Seção \ref{sec:triangulos}, utilizando
 banco de dados paralelos é a mesma utilizada em bancos de dados relacionais, uma vez que tal tecnologia 
-implementa a álgebra relacional e já mostramos na Seção \ref{sec:relacional}
+implementa a álgebra relacional. Na Seção \ref{sec:relacional} é mostrada 
 a consulta SQL que resolve o problema. Esta consulta envolve duas junções, 
 que serão executadas em paralelo, e as seleções de remoção de duplicatas que
 serão aplicadas após as junções no fluxo de execução das consultas (\emph{pipeline}).
 
 Os principais sistemas gerenciadores paralelos de bancos de dados comerciais são Pivotal Greenplum Database, 
-HP Vertica, Teradata, Microsoft SQL Server Parallel Data Warehouse e IBM Netezza, e alguns de código 
-aberto AsterixDB, Stratosphere (atualmente Apache Flink), Myria e Presto.
+HP Vertica, Teradata, Microsoft SQL Server Parallel Data Warehouse e IBM Netezza. Dentre os de código 
+aberto pode-se citar: AsterixDB, Stratosphere (atualmente Apache Flink), Myria e Presto.
 

@@ -1,7 +1,7 @@
 %
 % SBCbookchapter - SBC book chapters
 %
-% Copyright (C) 2005 Rafael Bohrer Ávila
+% Copyright (C) 2005 Rafael Bohrer ï¿½vila
 %
 % This program is free software; you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 % along with this program; if not, write to the Free Software
 % Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %
-% Charset: ISO8859-1 (latin-1) áéíóúç
+% Charset: ISO8859-1 (latin-1) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 %
 % $Id$
 %
@@ -118,7 +118,7 @@
 	\@startsection{subsection}{2}{0pt}{-6pt}{.1pt}
 		{\reset@font\bfseries}%
 }
-\newcounter{chapter}\setcounter{chapter}{1}
+\newcounter{chapter}\setcounter{chapter}{3}
 \renewcommand{\thesection}{\thechapter.\arabic{section}}
 \def\@seccntformat#1{\csname the#1\endcsname.\hspace{.5em}}
 

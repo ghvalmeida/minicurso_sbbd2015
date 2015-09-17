@@ -1,8 +1,8 @@
 \section{Contagem de triângulos} 
 \label{sec:triangulos}
 
-Nesta seção, iremos descrever o problema da contagem de triângulos, que irá nos acompanhar
-ao longo deste minicurso. Este problema é extremamente interessante para avaliação de 
+Nesta seção é descrito o problema da contagem de triângulos, que será utilizado
+ao longo deste capítulo. Este problema é extremamente interessante para a avaliação de 
 tecnologias uma vez que é de simples descrição e implementação, logo didádico, e complexo
 em termos de execução, desempenho.
 
@@ -14,7 +14,7 @@ Uma das grandes aplicações da contagem de triângulos é o cálculo do coefici
 de um nó em um grafo ou do grafo como um todo. Esta métrica possui diversas aplicações práticas 
 em análises de redes sociais. O coeficiente de agrupamento de um nó $v$ expressa a probabilidade de 
 dois nós vizinhos a $v$ serem também vizinhos entre si. Para o grafo $G$ como um todo, o coeficiente 
-de agrupamento é a média dos coeficientes de cada vértice do grafo; altos valores para este coeficiente 
+de agrupamento é a média dos coeficientes de cada vértice do grafo. Altos valores para este coeficiente 
 significam uma comunidade coesa (\emph{small world community}).
 
 Implementações de algoritmos eficientes para este problema abundam na literatura. O Algoritmo 
@@ -43,7 +43,7 @@ implementações de algoritmos que assumem que os dados cabem na memória.
 Este algoritmo começa por inicializar a variável $c$ de contagem de triângulos com $0$. Então, para
 todos os vértices do grafo (nomeados $v$), o algoritmo tenta resgatar um vértice que seja adjacente a 
 $v$, nomeado de $u$, e outro vértice que seja ao mesmo tempo adjacente a $v$ e a $u$, nomeado de $w$.
-Cada vez que esses três vértices conectados por arestas são encontrados, o algoritmmo incrementa o 
+Cada vez que esses três vértices conectados por arestas são encontrados, o algoritmo incrementa o 
 contador de triângulos $c$. Há mais um ponto a ser explicado aqui que é um teste para remover duplicatas
 que garante que $u>v$ e $w>u$, assumindo que os vértices possuam identificadores únicos no domínio dos
 números naturais, por exemplo. A complexidade deste algoritmo depende da implementação da busca pelos 
@@ -53,7 +53,7 @@ O que torna este problema interessante, em termos de execução, é a natureza d
 dados de redes sociais possuem distorção (\emph{skew}), seguindo uma função de distribuição chamada 
 \emph{power-law}. Tentando explicar de uma forma simples, o que acontece é que a grande maioria dos 
 vértices possuem muito poucas ligações, mas uma pequena fração possui muitas ligações. O gráfico abaixo 
-mostra a distribuição dos dados; o eixo das abcissas mostra o grau do vértice e o eixo das ordenadas 
+mostra a distribuição dos dados. O eixo das abcissas mostra o grau do vértice e o eixo das ordenadas 
 mostra quantos vértices possuem tal grau.
 
 \begin{figure}[!htbp]
@@ -62,15 +62,14 @@ mostra quantos vértices possuem tal grau.
 	\label{fig:powerlaw}
 \end{figure}
 
-Nos exemplos que iremos demonstrar durante a execução deste minicurso, serão utilizados dois conjuntos
-de dados, que foram utilizados por Leskovec et al. \citep{leskovec2012learning} e encontram-se 
-disponibilizados pelo Projeto SNAP (\textit{Stanford Network Analyst Project}), contendo
+Nos exemplos desse capítulo, serão utilizados dois conjuntos
+de dados, que foram também adotados por Leskovec et al. \citep{leskovec2012learning} e encontram-se 
+disponibilizados pelo Projeto SNAP (\textit{Stanford Network Analyst Project}). Eles contém
 usuários do Facebook e do Twitter, com estatísticas descritas na Tabela \ref{datasets}.
 Deve-se atentar para o fato de que o Twitter e o Facebook possuem políticas diferentes; no Twitter
 é possível que um usuário siga algum outro sem que este também o siga de volta, enquanto que
 no Facebook a contrapartida é exigida. Isto torna o grafo do Twitter direcionado e o do Facebook
-não direcionado. Nós iremos, nos nossos exemplos, lidar com grafos direcionados e, portanto, será
-necessário duplicar os dados do Facebook, criando a volta de cada ligação ou aresta.
+não direcionado. 
 
 \begin{table}[!htbp]
 \caption{Estatísticas dos conjuntos de redes sociais (Facebook e Twitter) utilizados.}

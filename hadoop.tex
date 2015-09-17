@@ -12,7 +12,7 @@ do Google publicou um artigo que explicava a arquitetura do GFS (Google FileSyst
 Doug e Mike decidiram criar uma implementação \textit{open source} dessa arquitetura e a chamaram 
 de NDFS (Nutch Distributed FileSystem).
 
-Em 2004, a equipe do Google publicou novo artigo agora detalhando como era possível criar um índice de 
+Em 2004, a equipe do Google publicou um novo artigo detalhando como era possível criar um índice de 
 toda a Internet usando o mecanismo de processamento paralelo denominado MapReduce \citep{dean2008mapreduce}. 
 Com base nesse trabalho, os desenvolvedores do Nutch migraram a maior parte de seus algoritmos para 
 executar sobre o MapReduce e o NDFS. Mais tarde, Doug Cutting foi trabalhar no Yahoo! liderando uma 
@@ -21,15 +21,14 @@ de HDFS ou \textit{Hadoop Distributed Filesystem}) e o MapReduce tornaram-se
 um projeto da Apache Software Foundation sob o nome de Apache Hadoop.
 
 Desde então, o Hadoop tem sido usado mundialmente para processar enormes quantidades de dados. Vários 
-frameworks foram construídos para executar usando a sua infraestrutura, como veremos a seguir. 
+frameworks foram construídos usando a sua infraestrutura, como será visto a seguir. 
 Diversos fornecedores criaram suas próprias distribuições do Hadoop, como Microsoft, IBM, EMC, Oracle e 
 outras empresas especializadas como Cloudera e Hortonworks.
 
 \subsection{Funcionamento do HDFS}
 
 O HDFS, como mencionado acima, é um sistema de arquivos distribuídos, projetado para armazenar arquivos 
-muito grandes\footnote{Atualmente há instâncias do HDFS armazenando PetaBytes de dados.} executando sobre 
-hardware commodity. 
+muito grandes\footnote{Atualmente há instâncias do HDFS armazenando PetaBytes de dados.} executando em computadores padrão de baixo custo. 
 
 Assim como em qualquer sistema de arquivos, um arquivo é dividido em \textbf{blocos} de dados. Enquanto 
 tipicamente um sistema de arquivos tradicional armazena dados em pequenos blocos (e.g. 512 bytes ou 1 kbyte), 
@@ -46,7 +45,7 @@ em outros nós do \textit{cluster}.
 	\label{fig:hdfs_arch}
 \end{figure}
 
-A arquitetura de um \textit{cluster} HDFS divide-se em \textit{NameNode} e \textit{DataNode}. O primeiro armazena um índice de arquivos e de seus blocos e o segundo armazena os dados (blocos). Um cliente que queira ler arquivos no HDFS, primeiro consulta o \textit{NameNode}, que então diz de quais nós do cluster os blocos serão lidos, garantindo um balanceamento de carga na leitura. Arquivos criados no HDFS só podem ser modificados anexando conteúdo no final. Não pode-se modificar blocos já escritos. A falha do \textit{DataNode} implica na indisponibilidade de todo o HDFS e, por esse motivo, é importante mantê-lo resiliente a falha com mecanismos de redundância. Uma visão geral dessa arquitetura pode ser vista na figura \ref{fig:hdfs_arch}.
+A arquitetura de um \textit{cluster} HDFS divide-se em \textit{NameNode} e \textit{DataNode}. O primeiro armazena um índice de arquivos e de seus blocos e o segundo armazena os dados (blocos). Um cliente que queira ler arquivos no HDFS, primeiro consulta o \textit{NameNode}, que então diz de quais nós do cluster os blocos serão lidos, garantindo um balanceamento de carga na leitura. Arquivos criados no HDFS só podem ser modificados anexando conteúdo no final. Não é possível modificar blocos já escritos. A falha do \textit{DataNode} implica na indisponibilidade de todo o HDFS e, por esse motivo, é importante mantê-lo resiliente a falha com mecanismos de redundância. Uma visão geral dessa arquitetura pode ser vista na figura \ref{fig:hdfs_arch}.
 
 \subsection{O ecossistema Hadoop}
 
@@ -70,12 +69,12 @@ O Hadoop MapReduce é um \textit{framework} para facilitar a escrita de programa
 processar uma enorme quantidade de dados de forma paralela, distribuída e resiliente a falhas. Os dados 
 de entrada para um \textit{job} MapReduce, por estarem armazenados no HDFS, são também processados 
 de forma distribuída, aproveitando dos dados disponíveis localmente em um nó do \textit{cluster}. 
-Na Figura \ref{fig:mapreduce} podemos ver um desenho esquemático de um \textit{job} MapReduce, que é, 
+A Figura \ref{fig:mapreduce} apresenta um desenho esquemático de um \textit{job} MapReduce, que é, 
 de forma resumida, composto por duas fases:
 
 \begin{enumerate}
 	\item \textit{Map}: quando os dados são processados e produzem saídas como tuplas no formato 
-\{\emph{chave}, \emph{valor}\}; 
+(\emph{chave}, \emph{valor}); 
 	\item \textit{Reduce}: quando as tuplas com mesma \emph{chave} são agrupadas para alguma atividade 
 de agregação.  
 \end{enumerate}
@@ -106,7 +105,7 @@ entrada para o segundo \textit{job}, que conecta as tríades com as arestas orig
 triângulos. Por fim, o terceiro \textit{job} conta o número de triângulos gerados pelo passo anterior. 
 Vamos olhar um exemplo para melhor entendimento.  
 
-Dada o grafo não direcionado de entrada descrita na tabela \ref{grafoExemplo}, onde os nomes identificam 
+Dado o grafo não direcionado de entrada descrito na Tabela \ref{grafoExemplo}, onde os nomes identificam 
 os vértices  e cada linha uma aresta que liga esses vértices, podemos identificar 3 triângulos: 
 (Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (André, Tamara, Marcelo).
 
@@ -130,8 +129,8 @@ Roberto      & Renato        \\ \hline
 \end{tabular}
 \end{table}
 
-Após a etapa de \textit{Map} do primeiro \textit{job}, são gerados um conjunto de 
-\{\textit{chave}, \textit{valor}\} conforme a tabela \ref{map1}. A chave é escolhida entre os vértices 
+Após a etapa de \textit{Map} do primeiro \textit{job}, são gerados um conjunto de pares
+(\textit{chave}, \textit{valor}) conforme a Tabela \ref{map1}. A chave é escolhida entre os vértices 
 da aresta, mas isso pode ocorrer de diversas maneiras. Para simplificar, usaremos o primeiro nome em ordem alfabética.
 
 \begin{table}[!htbp]
@@ -156,8 +155,8 @@ Roberto     & Roberto, Renato  \\ \hline
 \end{table}
 
 A etapa de \textit{Reduce} do primeiro \textit{job} é a mais importante. Nessa etapa, para cada chave 
-da Tabela \ref{map1}, são gerados as arestas originais (valor na tabela \ref{map1}) bem como as tríades baseadas 
-nessas arestas. O resultado, já ordenado, pode ser visto na tabela \ref{reduce1}.
+da Tabela \ref{map1}, são gerados as arestas originais (valor na Tabela \ref{map1}) bem como as tríades baseadas 
+nessas arestas. O resultado, já ordenado, pode ser visto na Tabela \ref{reduce1}.
 
 \begin{table}[!htbp]
 \centering
@@ -199,18 +198,18 @@ pelo passo anterior.
 
 O Hadoop MapReduce, como descrito anteriormente na Seção \ref{sec:mapreduce}, é um framework para ser 
 utilizado e desenvolvido em uma linguagem de programação, e.g. Java, com as complexidades inerentes de 
-um desenvolvimento de software em linguagens de computação. Assim surgiu rapidamente a necessidade de 
+um desenvolvimento de software em linguagens de programação. Assim surgiu rapidamente a necessidade de 
 especificação de programas MapReduce em linguagens declarativas de alto nível.
 
-O Hive \citep{thusoo2009hive} é então uma das iniciativas neste sentido, sendo uma especificação de 
-\textit{jobs} MapReduce em linguagem similar ao SQL: o HiveQL. O Hive foi inicialmente desenvolvido 
+O Hive \citep{thusoo2009hive} é uma das iniciativas neste sentido, no qual a especificação de 
+\textit{jobs} MapReduce é feita em uma linguagem similar ao SQL: o HiveQL. O Hive foi inicialmente desenvolvido 
 pelo Facebook e atualmente seus principais contribuidores são o próprio Facebook e o Netflix.
 
-O Hive entende arquivos do HDFS como tabelas com estrutura, de forma similar a um SGBD. Entretanto, 
+O Hive interpreta arquivos do HDFS como tabelas com estrutura, de forma similar a um SGBD. Entretanto, 
 nenhuma estrutura adicional de SGBD é criada pelo Hive, exceto os metadados sobre o formato dos arquivos 
 em tabelas. No HiveQL há uma linguagem de definição destes formatos.
 
-Como um exemplo, vamos imaginar que temos um arquivo contendo os dados do Twitter no HDFS contendo 
+Como um exemplo, imagine que há um arquivo contendo os dados do Twitter no HDFS contendo 
 os dados da tabela do twitter descrita na Seção \ref{sec:relacional} com atributos \textit{follower} e
 \textit{followee}, ou seja, um arquivo texto em formato CSV contendo dois números inteiros (delimitados
 por vírgula). O comando HiveQL abaixo cria os metadados para a tabela Twitter a partir deste arquivo.
@@ -275,7 +274,7 @@ O código abaixo executa a contagem dos triângulos, uma vez mapeada a tabela Tw
 \end{verbatim}
 
 As três primeiras linhas atribuem as tabelas Twitter\_1, Twitter\_2 e Twitter\_3. Esta atribuição 
-em três tabelas não deveria ser necessária, mas na versão do Pig (antiga) em que criamos e executamos
+em três tabelas não deveria ser necessária, mas na versão do Pig (antiga) em que foi criado e executado
 este código não era possível fazer uma junção da tabela com ela mesma (\emph{self join}).
 
 As próximas duas linhas executam as duas junções; a próxima, um filtro que elimina as duplicatas;
@@ -309,10 +308,10 @@ conhecida, o Spark realmente lê os dados e faz cálculos na memória. Com isso,
 Spark consegue otimizar tudo que será executado, escolhendo os melhores nós, a melhor sequência, etc.
 
 O Apache Spark também vem com um conjunto de bibliotecas com algoritmos para aprendizado de máquina, 
-grafos, fluxo contínuo de dados e SQL. Algumas dessas vermos a seguir.
+grafos, fluxo contínuo de dados e SQL. Algumas dessas são vistas a seguir.
 
 \subsection{Utilizando o console python}
-O Apache Spark possui consoles iterativos nas linguagens Python e Scala e seus \textit{jobs} podem 
+O Apache Spark possui consoles interativos nas linguagens Python e Scala e seus \textit{jobs} podem 
 ser submetidos em batch também em Java. A API do Spark é acessada a partir de um objeto central 
 denominado \texttt{SparkContext}. Esse objeto contém a conexão com uma instância do cluster e a partir 
 dele todos os outros objetos e métodos são acessados. Ao se iniciar um console do Spark, o objeto já 
@@ -331,10 +330,10 @@ palavras = arquivo.flatMap(lambda linha : linha.split(' '))
 #cria novo RDD com tuplas do formato (palavra, 1)
 palavrasCV = palavras.map(lambda palavra : (palavra, 1)) 
 
-#executa o Reduce usando a funcaoo add para os valores das tuplas.
+#executa o Reduce usando a funcao add para os valores das tuplas.
 contagemPalafras = palavrasCV.reduceByKey(add) 
 
-#somente nesse comando toda a computacaoo e feita de forma otimizada.
+#somente nesse comando toda a computacao e feita de forma otimizada.
 contagemPalavras.collect() 
 
 \end{lstlisting}
@@ -372,8 +371,8 @@ schemaWiki = sqlContext.createDataFrame(arestas)
 schemaWiki.registerTempTable("arestas")
 
 # Executa o SQL
-triangulos = sqlContext.sql("SELECT count(*) FROM arestas R, arestas S, arestas T " +
-    " WHERE R.follower = S.followee AND S.follower = T.followee AND T.follower = R.followee")
+triangulos = sqlContext.sql("SELECT count(*) FROM arestas R, arestas S, arestas T WHERE R.follower = S.followee AND S.follower = T.followee AND T.follower = R.followee AND R.follower > S.follower AND
+       S.follower > T.follower")
 print triangulos.collect()
 
 \end{lstlisting}
@@ -394,8 +393,8 @@ vértice de um grafo. Mais detalhes desse módulo podem ser obtidos na documenta
 \footnote{http://spark.apache.org/docs/latest/graphx-programming-guide.html}. 
 
 Como é recente seu desenvolvimento, ainda são poucos os algoritmos implementados e a única linguagem 
-suportada é o Scala. Atualmente conta com algoritmos de PageRanki \citep{brin2012reprint}, identificação 
-de componentes conectados e contagem de triângulos, que demonstramos o uso no trecho de código abaixo. 
+suportada é o Scala. Atualmente ele conta com algoritmos de PageRank \citep{brin2012reprint}, identificação 
+de componentes conectados e contagem de triângulos, que é demonstrada com trecho de código abaixo. 
 Comparado com as estratégias de MapReduce, a contagem de triângulos utilizando Spark GraphX é de 
 várias ordens de grandeza mais rápido e eficiente em consumo de memória. 
 
