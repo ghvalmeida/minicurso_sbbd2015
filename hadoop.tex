@@ -1,82 +1,82 @@
 \section{Hadoop}
 \label{sec:hadoop}
 
-\subsection{Breve hist√≥rico}
+\subsection{Breve histÛrico}
 
-O problema era simples: como criar um √≠ndice para uma m√°quina de busca de toda a Internet? Foi com esse 
+O problema era simples: como criar um Ìndice para uma m·quina de busca de toda a Internet? Foi com esse 
 desafio que Mike Cafarella e Doug Cutting resolveram desenvolver o Apache Nutch. Rapidamente o 
-\textit{crawler} e a m√°quina de busca ficaram prontos, mas eles perceberam que a arquitetura n√£o 
-escalaria para criar um √≠ndice de mais de um bilh√£o de p√°ginas da Internet. Na mesma √©poca, a equipe 
+\textit{crawler} e a m·quina de busca ficaram prontos, mas eles perceberam que a arquitetura n„o 
+escalaria para criar um Ìndice de mais de um bilh„o de p·ginas da Internet. Na mesma Època, a equipe 
 do Google publicou um artigo que explicava a arquitetura do GFS (Google FileSystem) 
-\citep{ghemawat2003google}, que era um sistema de arquivos distribu√≠do usado em sua m√°quina de busca. 
-Doug e Mike decidiram criar uma implementa√ß√£o \textit{open source} dessa arquitetura e a chamaram 
+\cite{ghemawat2003google}, que era um sistema de arquivos distribuÌdo usado em sua m·quina de busca. 
+Doug e Mike decidiram criar uma implementaÁ„o \textit{open source} dessa arquitetura e a chamaram 
 de NDFS (Nutch Distributed FileSystem).
 
-Em 2004, a equipe do Google publicou um novo artigo detalhando como era poss√≠vel criar um √≠ndice de 
-toda a Internet usando o mecanismo de processamento paralelo denominado MapReduce \citep{dean2008mapreduce}. 
+Em 2004, a equipe do Google publicou um novo artigo detalhando como era possÌvel criar um Ìndice de 
+toda a Internet usando o mecanismo de processamento paralelo denominado MapReduce \cite{dean2008mapreduce}. 
 Com base nesse trabalho, os desenvolvedores do Nutch migraram a maior parte de seus algoritmos para 
 executar sobre o MapReduce e o NDFS. Mais tarde, Doug Cutting foi trabalhar no Yahoo! liderando uma 
-equipe que construiu a nova gera√ß√£o de m√°quina de busca deles. Depois, o NDFS (posteriormente chamado
+equipe que construiu a nova geraÁ„o de m·quina de busca deles. Depois, o NDFS (posteriormente chamado
 de HDFS ou \textit{Hadoop Distributed Filesystem}) e o MapReduce tornaram-se 
 um projeto da Apache Software Foundation sob o nome de Apache Hadoop.
 
-Desde ent√£o, o Hadoop tem sido usado mundialmente para processar enormes quantidades de dados. V√°rios 
-frameworks foram constru√≠dos usando a sua infraestrutura, como ser√° visto a seguir. 
-Diversos fornecedores criaram suas pr√≥prias distribui√ß√µes do Hadoop, como Microsoft, IBM, EMC, Oracle e 
+Desde ent„o, o Hadoop tem sido usado mundialmente para processar enormes quantidades de dados. V·rios 
+frameworks foram construÌdos usando a sua infraestrutura, como ser· visto a seguir. 
+Diversos fornecedores criaram suas prÛprias distribuiÁıes do Hadoop, como Microsoft, IBM, EMC, Oracle e 
 outras empresas especializadas como Cloudera e Hortonworks.
 
 \subsection{Funcionamento do HDFS}
 
-O HDFS, como mencionado acima, √© um sistema de arquivos distribu√≠dos, projetado para armazenar arquivos 
-muito grandes\footnote{Atualmente h√° inst√¢ncias do HDFS armazenando PetaBytes de dados.} executando em computadores padr√£o de baixo custo. 
+O HDFS, como mencionado acima, È um sistema de arquivos distribuÌdos, projetado para armazenar arquivos 
+muito grandes\footnote{Atualmente h· inst‚ncias do HDFS armazenando PetaBytes de dados.} executando em computadores padr„o de baixo custo. 
 
-Assim como em qualquer sistema de arquivos, um arquivo √© dividido em \textbf{blocos} de dados. Enquanto 
+Assim como em qualquer sistema de arquivos, um arquivo È dividido em \textbf{blocos} de dados. Enquanto 
 tipicamente um sistema de arquivos tradicional armazena dados em pequenos blocos (e.g. 512 bytes ou 1 kbyte), 
-o HDFS usa, por padr√£o, blocos de 64MB. Isso torna o HDFS ineficiente para uso em arquivos muito pequenos 
-e numerosos. Para garantir disponibilidade e leitura em paralelo, cada um dos blocos √© replicado em um dos 
-n√≥s de um \textit{cluster} HDFS. Quando um disco ou um dos n√≥s do \textit{cluster} falha, al√©m do bloco 
-poder ser lido de outro n√≥, o sistema de arquivos automaticamente recria os blocos presentes naquele disco 
-em outros n√≥s do \textit{cluster}.
+o HDFS usa, por padr„o, blocos de 64MB. Isso torna o HDFS ineficiente para uso em arquivos muito pequenos 
+e numerosos. Para garantir disponibilidade e leitura em paralelo, cada um dos blocos È replicado em um dos 
+nÛs de um \textit{cluster} HDFS. Quando um disco ou um dos nÛs do \textit{cluster} falha, alÈm do bloco 
+poder ser lido de outro nÛ, o sistema de arquivos automaticamente recria os blocos presentes naquele disco 
+em outros nÛs do \textit{cluster}.
 
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=\linewidth]{./Arquitetura_HDFS.jpg}
-	\caption{Vis√£o geral da arquitetura do HDFS}
+	\caption{Vis„o geral da arquitetura do HDFS}
 	\label{fig:hdfs_arch}
 \end{figure}
 
-A arquitetura de um \textit{cluster} HDFS divide-se em \textit{NameNode} e \textit{DataNode}. O primeiro armazena um √≠ndice de arquivos e de seus blocos e o segundo armazena os dados (blocos). Um cliente que queira ler arquivos no HDFS, primeiro consulta o \textit{NameNode}, que ent√£o diz de quais n√≥s do cluster os blocos ser√£o lidos, garantindo um balanceamento de carga na leitura. Arquivos criados no HDFS s√≥ podem ser modificados anexando conte√∫do no final. N√£o √© poss√≠vel modificar blocos j√° escritos. A falha do \textit{DataNode} implica na indisponibilidade de todo o HDFS e, por esse motivo, √© importante mant√™-lo resiliente a falha com mecanismos de redund√¢ncia. Uma vis√£o geral dessa arquitetura pode ser vista na figura \ref{fig:hdfs_arch}.
+A arquitetura de um \textit{cluster} HDFS divide-se em \textit{NameNode} e \textit{DataNode}. O primeiro armazena um Ìndice de arquivos e de seus blocos e o segundo armazena os dados (blocos). Um cliente que queira ler arquivos no HDFS, primeiro consulta o \textit{NameNode}, que ent„o diz de quais nÛs do cluster os blocos ser„o lidos, garantindo um balanceamento de carga na leitura. Arquivos criados no HDFS sÛ podem ser modificados anexando conte˙do no final. N„o È possÌvel modificar blocos j· escritos. A falha do \textit{DataNode} implica na indisponibilidade de todo o HDFS e, por esse motivo, È importante mantÍ-lo resiliente a falha com mecanismos de redund‚ncia. Uma vis„o geral dessa arquitetura pode ser vista na figura \ref{fig:hdfs_arch}.
 
 \subsection{O ecossistema Hadoop}
 
-Atualmente o Hadoop conta com um ecossistema com diversos \textit{frameworks}. Uma lista, n√£o exaustiva, 
-de alguns dos principais projetos que comp√µem o ecossistema pode ser vista abaixo.
+Atualmente o Hadoop conta com um ecossistema com diversos \textit{frameworks}. Uma lista, n„o exaustiva, 
+de alguns dos principais projetos que compıem o ecossistema pode ser vista abaixo.
 
 \begin{itemize}
 	\item Ambari: Uma ferramenta web para aprovisionamento e gerenciamento de um cluster Hadoop e de diversos de seus componentes.
-	\item HBase: Um banco de dados n√£o relacional (NoSQL) e colunar que utiliza a infraestrutura do Hadoop como mecanismo de armazenamento.
-	\item Hive: Uma infraestrutura de armaz√©m de dados com suporte a sumariza√ß√£o de dados e consultas.
-	\item Pig: Uma linguagem de alto n√≠vel para fluxo de dados e um \textit{framework} de execu√ß√£o de computa√ß√£o distribu√≠da. 
-	\item Spark: Uma \textit{engine} r√°pida e de prop√≥sito geral para processamento de dados em mem√≥ria baseados nos dados do HDFS. O Spark oferece um modelo de programa√ß√£o simples e poderoso para executar uma enorme gama de atividades como ETL, aprendizagem de m√°quina, processamento cont√≠nuo de dados, processamento de grafos, etc.
-	\item Sqoop: uma ferramenta para transfer√™ncia massiva de dados entre bancos de dados relacionais e o HDFS.
-	\item Mahout: Um conjunto de bibliotecas para executar algoritmos de aprendizagem de m√°quina e minera√ß√£o de dados. Os coordenadores do projeto decidiram mover a implementa√ß√£o dos algoritmos de MapReduce para o Spark.
+	\item HBase: Um banco de dados n„o relacional (NoSQL) e colunar que utiliza a infraestrutura do Hadoop como mecanismo de armazenamento.
+	\item Hive: Uma infraestrutura de armazÈm de dados com suporte a sumarizaÁ„o de dados e consultas.
+	\item Pig: Uma linguagem de alto nÌvel para fluxo de dados e um \textit{framework} de execuÁ„o de computaÁ„o distribuÌda. 
+	\item Spark: Uma \textit{engine} r·pida e de propÛsito geral para processamento de dados em memÛria baseados nos dados do HDFS. O Spark oferece um modelo de programaÁ„o simples e poderoso para executar uma enorme gama de atividades como ETL, aprendizagem de m·quina, processamento contÌnuo de dados, processamento de grafos, etc.
+	\item Sqoop: uma ferramenta para transferÍncia massiva de dados entre bancos de dados relacionais e o HDFS.
+	\item Mahout: Um conjunto de bibliotecas para executar algoritmos de aprendizagem de m·quina e mineraÁ„o de dados. Os coordenadores do projeto decidiram mover a implementaÁ„o dos algoritmos de MapReduce para o Spark.
 \end{itemize}
 
 \subsection{MapReduce}
 \label{sec:mapreduce}
 
-O Hadoop MapReduce √© um \textit{framework} para facilitar a escrita de programas de computador para 
-processar uma enorme quantidade de dados de forma paralela, distribu√≠da e resiliente a falhas. Os dados 
-de entrada para um \textit{job} MapReduce, por estarem armazenados no HDFS, s√£o tamb√©m processados 
-de forma distribu√≠da, aproveitando dos dados dispon√≠veis localmente em um n√≥ do \textit{cluster}. 
-A Figura \ref{fig:mapreduce} apresenta um desenho esquem√°tico de um \textit{job} MapReduce, que √©, 
+O Hadoop MapReduce È um \textit{framework} para facilitar a escrita de programas de computador para 
+processar uma enorme quantidade de dados de forma paralela, distribuÌda e resiliente a falhas. Os dados 
+de entrada para um \textit{job} MapReduce, por estarem armazenados no HDFS, s„o tambÈm processados 
+de forma distribuÌda, aproveitando dos dados disponÌveis localmente em um nÛ do \textit{cluster}. 
+A Figura \ref{fig:mapreduce} apresenta um desenho esquem·tico de um \textit{job} MapReduce, que È, 
 de forma resumida, composto por duas fases:
 
 \begin{enumerate}
-	\item \textit{Map}: quando os dados s√£o processados e produzem sa√≠das como tuplas no formato 
+	\item \textit{Map}: quando os dados s„o processados e produzem saÌdas como tuplas no formato 
 (\emph{chave}, \emph{valor}); 
-	\item \textit{Reduce}: quando as tuplas com mesma \emph{chave} s√£o agrupadas para alguma atividade 
-de agrega√ß√£o.  
+	\item \textit{Reduce}: quando as tuplas com mesma \emph{chave} s„o agrupadas para alguma atividade 
+de agregaÁ„o.  
 \end{enumerate}
 
 \begin{figure}[!htbp]
@@ -86,28 +86,28 @@ de agrega√ß√£o.
 	\label{fig:mapreduce}
 \end{figure}
 
-Um exemplo bem simples para entender o MapReduce √© um job para contar a ocorr√™ncia de cada palavra 
-em um texto. Na fase de \textit{Map}, cada linha lida do arquivo √© dividida em suas palavras que 
-produzem uma sa√≠da \{PalavraA, 1\}. Note que se uma palavra aparece duas vezes na mesma linha duas 
-tuplas id√™nticas ser√£o produzidas. Na faze de \textit{Reduce}, as tuplas com mesma chave ser√£o 
-agrupadas e os valores $1$ ser√£o somados. 
+Um exemplo bem simples para entender o MapReduce È um job para contar a ocorrÍncia de cada palavra 
+em um texto. Na fase de \textit{Map}, cada linha lida do arquivo È dividida em suas palavras que 
+produzem uma saÌda \{PalavraA, 1\}. Note que se uma palavra aparece duas vezes na mesma linha duas 
+tuplas idÍnticas ser„o produzidas. Na faze de \textit{Reduce}, as tuplas com mesma chave ser„o 
+agrupadas e os valores $1$ ser„o somados. 
 
-Em geral, o programador n√£o precisa se preocupar com comunica√ß√£o de dados, tratamento de concorr√™ncia 
-e eventuais falhas em algum n√≥ que est√° processando um determinado \textit{job}. Esse √© um dos grandes 
+Em geral, o programador n„o precisa se preocupar com comunicaÁ„o de dados, tratamento de concorrÍncia 
+e eventuais falhas em algum nÛ que est· processando um determinado \textit{job}. Esse È um dos grandes 
 diferenciais do Hadoop MapReduce. 
 
-Uma poss√≠vel solu√ß√£o para contagem de tri√¢ngulos utilizando MapReduce, baseada na proposta feita por 
-Suri e Sergei \citep{suri2011counting}, envolve o encadeamento de 3 \textit{jobs} MapReduce. O primeiro 
-constr√≥i um conjunto de todas as tr√≠ades (par de arestas que compartilham um v√©rtice) de um grafo. Essas 
-tr√≠ades, juntamente com as arestas originais s√£o gerados como linhas, mas com um atributo identificador 
-dizendo se √© uma aresta original do arquivo ou se foi gerada pelo primeiro passo. Essa sa√≠da serve de 
-entrada para o segundo \textit{job}, que conecta as tr√≠ades com as arestas originais, formando os 
-tri√¢ngulos. Por fim, o terceiro \textit{job} conta o n√∫mero de tri√¢ngulos gerados pelo passo anterior. 
+Uma possÌvel soluÁ„o para contagem de tri‚ngulos utilizando MapReduce, baseada na proposta feita por 
+Suri e Sergei \cite{suri2011counting}, envolve o encadeamento de 3 \textit{jobs} MapReduce. O primeiro 
+constrÛi um conjunto de todas as trÌades (par de arestas que compartilham um vÈrtice) de um grafo. Essas 
+trÌades, juntamente com as arestas originais s„o gerados como linhas, mas com um atributo identificador 
+dizendo se È uma aresta original do arquivo ou se foi gerada pelo primeiro passo. Essa saÌda serve de 
+entrada para o segundo \textit{job}, que conecta as trÌades com as arestas originais, formando os 
+tri‚ngulos. Por fim, o terceiro \textit{job} conta o n˙mero de tri‚ngulos gerados pelo passo anterior. 
 Vamos olhar um exemplo para melhor entendimento.  
 
-Dado o grafo n√£o direcionado de entrada descrito na Tabela \ref{grafoExemplo}, onde os nomes identificam 
-os v√©rtices  e cada linha uma aresta que liga esses v√©rtices, podemos identificar 3 tri√¢ngulos: 
-(Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (Andr√©, Tamara, Marcelo).
+Dado o grafo n„o direcionado de entrada descrito na Tabela \ref{grafoExemplo}, onde os nomes identificam 
+os vÈrtices  e cada linha uma aresta que liga esses vÈrtices, podemos identificar 3 tri‚ngulos: 
+(Bernardo, Chico, Renato), (Renato, Chico, Roberto) e (AndrÈ, Tamara, Marcelo).
 
 \begin{table}[!htbp]
 \centering
@@ -116,9 +116,9 @@ os v√©rtices  e cada linha uma aresta que liga esses v√©rtices, podemos identifi
 \begin{tabular}{|c|c|}
 \hline
 {\bf Origem} & {\bf Destino} \\ \hline
-Andr√©        & Bernardo      \\ \hline
-Andr√©        & Marcelo       \\ \hline
-Andr√©        & Tamara        \\ \hline
+AndrÈ        & Bernardo      \\ \hline
+AndrÈ        & Marcelo       \\ \hline
+AndrÈ        & Tamara        \\ \hline
 Bernardo     & Chico         \\ \hline
 Bernardo     & Renato        \\ \hline
 Chico        & Renato        \\ \hline
@@ -129,9 +129,9 @@ Roberto      & Renato        \\ \hline
 \end{tabular}
 \end{table}
 
-Ap√≥s a etapa de \textit{Map} do primeiro \textit{job}, s√£o gerados um conjunto de pares
-(\textit{chave}, \textit{valor}) conforme a Tabela \ref{map1}. A chave √© escolhida entre os v√©rtices 
-da aresta, mas isso pode ocorrer de diversas maneiras. Para simplificar, usaremos o primeiro nome em ordem alfab√©tica.
+ApÛs a etapa de \textit{Map} do primeiro \textit{job}, s„o gerados um conjunto de pares
+(\textit{chave}, \textit{valor}) conforme a Tabela \ref{map1}. A chave È escolhida entre os vÈrtices 
+da aresta, mas isso pode ocorrer de diversas maneiras. Para simplificar, usaremos o primeiro nome em ordem alfabÈtica.
 
 \begin{table}[!htbp]
 \centering
@@ -141,9 +141,9 @@ da aresta, mas isso pode ocorrer de diversas maneiras. Para simplificar, usaremo
 
 \hline
 {\bf Chave} & {\bf Valor (arest)}      \\ \hline
-Andr√©       & Andr√©, Marcelo   \\ \hline
-Andr√©       & Andr√©, Tamara    \\ \hline
-Andr√©       & Andr√©, Bernardo  \\ \hline
+AndrÈ       & AndrÈ, Marcelo   \\ \hline
+AndrÈ       & AndrÈ, Tamara    \\ \hline
+AndrÈ       & AndrÈ, Bernardo  \\ \hline
 Marcelo     & Marcelo, Tamara  \\ \hline
 Bernardo    & Bernardo, Chico  \\ \hline
 Bernardo    & Bernardo, Renato \\ \hline
@@ -154,9 +154,9 @@ Roberto     & Roberto, Renato  \\ \hline
 \end{tabular}
 \end{table}
 
-A etapa de \textit{Reduce} do primeiro \textit{job} √© a mais importante. Nessa etapa, para cada chave 
-da Tabela \ref{map1}, s√£o gerados as arestas originais (valor na Tabela \ref{map1}) bem como as tr√≠ades baseadas 
-nessas arestas. O resultado, j√° ordenado, pode ser visto na Tabela \ref{reduce1}.
+A etapa de \textit{Reduce} do primeiro \textit{job} È a mais importante. Nessa etapa, para cada chave 
+da Tabela \ref{map1}, s„o gerados as arestas originais (valor na Tabela \ref{map1}) bem como as trÌades baseadas 
+nessas arestas. O resultado, j· ordenado, pode ser visto na Tabela \ref{reduce1}.
 
 \begin{table}[!htbp]
 \centering
@@ -164,21 +164,21 @@ nessas arestas. O resultado, j√° ordenado, pode ser visto na Tabela \ref{reduce1
 \label{reduce1}
 \begin{tabular}{|c|c|c|}
 \hline
-{\bf Chave}       & {\bf Gerado} & {\bf Tr√≠ades}                           \\ \hline
-Andr√©, Bernardo   & 0            &                                         \\ \hline
-Andr√©, Marcelo    & 0            &                                         \\ \hline
-Andr√©, Tamara     & 0            &                                         \\ \hline
+{\bf Chave}       & {\bf Gerado} & {\bf TrÌades}                           \\ \hline
+AndrÈ, Bernardo   & 0            &                                         \\ \hline
+AndrÈ, Marcelo    & 0            &                                         \\ \hline
+AndrÈ, Tamara     & 0            &                                         \\ \hline
 Bernardo, Chico   & 0            &                                         \\ \hline
-Bernardo, Tamara  & 1            & \{Andr√©,Bernardo\}, \{Andr√©,Tamara\}    \\ \hline
+Bernardo, Tamara  & 1            & \{AndrÈ,Bernardo\}, \{AndrÈ,Tamara\}    \\ \hline
 Bernardo, Renato  & 0            &                                         \\ \hline
-Bernardo, Marcelo & 1            & \{Andr√©,Bernardo\}, \{Andr√©,Marcelo\}   \\ \hline
+Bernardo, Marcelo & 1            & \{AndrÈ,Bernardo\}, \{AndrÈ,Marcelo\}   \\ \hline
 Chico, Livia      & 0            &                                         \\ \hline
 Chico, Roberto    & 0            &                                         \\ \hline
 Chico, Renato     & 1            & \{Bernardo,Chico\}, \{Bernardo,Renato\} \\ \hline
 Chico, Renato     & 0            &                                         \\ \hline
 Livia, Roberto    & 1            & \{Chico, Livia\}, \{Chico, Roberto\}    \\ \hline
 Livia, Renato     & 1            & \{Chico, Livia\}, \{Chico, Renato\}     \\ \hline
-Marcelo, Tamara   & 1            & \{Andr√©,Marcelo\}, \{Andr√©,Tamara\}     \\ \hline
+Marcelo, Tamara   & 1            & \{AndrÈ,Marcelo\}, \{AndrÈ,Tamara\}     \\ \hline
 Marcelo, Tamara   & 0            &                                         \\ \hline
 Roberto, Renato   & 1            & \{Chico,Roberto\}, \{Chico,Renato\}     \\ \hline
 Roberto, Renato   & 0            &                                         \\ \hline
@@ -186,57 +186,57 @@ Roberto, Renato   & 0            &                                         \\ \h
 \end{table}
 
 O segundo \textit{job} tem apenas a etapa de \textit{Reduce} e toma de entrada o resultado produzido na 
-Tabela \ref{reduce1}. Para cada grupo de chaves (arestas), √© verificado se h√° uma aresta original 
-(Gerado = 0). Se sim, √© verificada em quantas tr√≠ades essa aresta fecha um tri√¢ngulo, emitindo uma 
+Tabela \ref{reduce1}. Para cada grupo de chaves (arestas), È verificado se h· uma aresta original 
+(Gerado = 0). Se sim, È verificada em quantas trÌades essa aresta fecha um tri‚ngulo, emitindo uma 
 contagem parcial para cada chave. Pelo nosso exemplo, podemos ver que isso ocorre nas chaves 
-(Chico, Renato), (Roberto, Renato) e (Marcelo, Tamara), totalizando nossos 3 tri√¢ngulos.
+(Chico, Renato), (Roberto, Renato) e (Marcelo, Tamara), totalizando nossos 3 tri‚ngulos.
 
-A √∫ltima etapa (terceiro \textit{Job}) √© uma tarefa trivial de somar as contagens parciais emitidas 
+A ˙ltima etapa (terceiro \textit{Job}) È uma tarefa trivial de somar as contagens parciais emitidas 
 pelo passo anterior.
 
 \subsection{Hive}
 
-O Hadoop MapReduce, como descrito anteriormente na Se√ß√£o \ref{sec:mapreduce}, √© um framework para ser 
-utilizado e desenvolvido em uma linguagem de programa√ß√£o, e.g. Java, com as complexidades inerentes de 
-um desenvolvimento de software em linguagens de programa√ß√£o. Assim surgiu rapidamente a necessidade de 
-especifica√ß√£o de programas MapReduce em linguagens declarativas de alto n√≠vel.
+O Hadoop MapReduce, como descrito anteriormente na SeÁ„o \ref{sec:mapreduce}, È um framework para ser 
+utilizado e desenvolvido em uma linguagem de programaÁ„o, e.g. Java, com as complexidades inerentes de 
+um desenvolvimento de software em linguagens de programaÁ„o. Assim surgiu rapidamente a necessidade de 
+especificaÁ„o de programas MapReduce em linguagens declarativas de alto nÌvel.
 
-O Hive \citep{thusoo2009hive} √© uma das iniciativas neste sentido, no qual a especifica√ß√£o de 
-\textit{jobs} MapReduce √© feita em uma linguagem similar ao SQL: o HiveQL. O Hive foi inicialmente desenvolvido 
-pelo Facebook e atualmente seus principais contribuidores s√£o o pr√≥prio Facebook e o Netflix.
+O Hive \cite{thusoo2009hive} È uma das iniciativas neste sentido, no qual a especificaÁ„o de 
+\textit{jobs} MapReduce È feita em uma linguagem similar ao SQL: o HiveQL. O Hive foi inicialmente desenvolvido 
+pelo Facebook e atualmente seus principais contribuidores s„o o prÛprio Facebook e o Netflix.
 
 O Hive interpreta arquivos do HDFS como tabelas com estrutura, de forma similar a um SGBD. Entretanto, 
-nenhuma estrutura adicional de SGBD √© criada pelo Hive, exceto os metadados sobre o formato dos arquivos 
-em tabelas. No HiveQL h√° uma linguagem de defini√ß√£o destes formatos.
+nenhuma estrutura adicional de SGBD È criada pelo Hive, exceto os metadados sobre o formato dos arquivos 
+em tabelas. No HiveQL h· uma linguagem de definiÁ„o destes formatos.
 
-Como um exemplo, imagine que h√° um arquivo contendo os dados do Twitter no HDFS contendo 
-os dados da tabela do twitter descrita na Se√ß√£o \ref{sec:relacional} com atributos \textit{follower} e
-\textit{followee}, ou seja, um arquivo texto em formato CSV contendo dois n√∫meros inteiros (delimitados
-por v√≠rgula). O comando HiveQL abaixo cria os metadados para a tabela Twitter a partir deste arquivo.
+Como um exemplo, imagine que h· um arquivo contendo os dados do Twitter no HDFS contendo 
+os dados da tabela do twitter descrita na SeÁ„o \ref{sec:relacional} com atributos \textit{follower} e
+\textit{followee}, ou seja, um arquivo texto em formato CSV contendo dois n˙meros inteiros (delimitados
+por vÌrgula). O comando HiveQL abaixo cria os metadados para a tabela Twitter a partir deste arquivo.
 
 \begin{verbatim}
 CREATE TABLE twitter (follower INT, followee INT);
 LOAD DATA INPATH '/input/twitter' OVERWRITE INTO TABLE twitter;
 \end{verbatim}
 
-Embora o HiveQL n√£o implemente a linguagem SQL em todas as suas funcionalidades, a consulta da
-Se√ß√£o \ref{sec:relacional} que resolve o problema da contagem dos tri√¢ngulos pode ser aplicada
+Embora o HiveQL n„o implemente a linguagem SQL em todas as suas funcionalidades, a consulta da
+SeÁ„o \ref{sec:relacional} que resolve o problema da contagem dos tri‚ngulos pode ser aplicada
 diretamente no console do Hive.
 
-√â importante notar que o Hive interpreta o SQL e gera \textit{jobs} MapReduce em Java, que s√£o
+… importante notar que o Hive interpreta o SQL e gera \textit{jobs} MapReduce em Java, que s„o
 compilados e executados sob demanda.
 
 \subsection{Pig}
 
-De forma similar ao Hive, o Yahoo! criou o Pig \citep{olston2008pig} em 2006 e o moveu como um projeto 
+De forma similar ao Hive, o Yahoo! criou o Pig \cite{olston2008pig} em 2006 e o moveu como um projeto 
 para o Hadoop em 2007, com o intuito de simplificar o desenvolvimento de \textit{jobs} MapReduce 
-atrav√©s de uma linguagem procedural de alto n√≠vel (Pig Latin).
+atravÈs de uma linguagem procedural de alto nÌvel (Pig Latin).
 
-O Pig Latin, diferentemente do HiveQL, √© uma linguagem procedural e n√£o declarativa. √â poss√≠vel 
-efetuar atribui√ß√µes e manipula√ß√£o de vari√°veis intermedi√°rias. Em geral, cada comando PigLatin
-corresponde a um operador da √°lgebra relacional.
+O Pig Latin, diferentemente do HiveQL, È uma linguagem procedural e n„o declarativa. … possÌvel 
+efetuar atribuiÁıes e manipulaÁ„o de vari·veis intermedi·rias. Em geral, cada comando PigLatin
+corresponde a um operador da ·lgebra relacional.
 
-O exemplo abaixo mostra a declara√ß√£o da tabela do Twitter na linguagem Pig Latin.
+O exemplo abaixo mostra a declaraÁ„o da tabela do Twitter na linguagem Pig Latin.
 
 \begin{verbatim}
 Twitter = LOAD '/input/twitter' USING PigStorage(',') 
@@ -246,7 +246,7 @@ Twitter = LOAD '/input/twitter' USING PigStorage(',')
 Note que, diferentemente do Hive, o Pig Lating cria a tabela Twitter e ao mesmo tempo instancia 
 a mesma lendo do arquivo de input com o formato especificado.
 
-O c√≥digo abaixo executa a contagem dos tri√¢ngulos, uma vez mapeada a tabela Twitter.
+O cÛdigo abaixo executa a contagem dos tri‚ngulos, uma vez mapeada a tabela Twitter.
 
 \newpage
 
@@ -273,51 +273,51 @@ O c√≥digo abaixo executa a contagem dos tri√¢ngulos, uma vez mapeada a tabela Tw
     DUMP Triangles_Cnt;
 \end{verbatim}
 
-As tr√™s primeiras linhas atribuem as tabelas Twitter\_1, Twitter\_2 e Twitter\_3. Esta atribui√ß√£o 
-em tr√™s tabelas n√£o deveria ser necess√°ria, mas na vers√£o do Pig (antiga) em que foi criado e executado
-este c√≥digo n√£o era poss√≠vel fazer uma jun√ß√£o da tabela com ela mesma (\emph{self join}).
+As trÍs primeiras linhas atribuem as tabelas Twitter\_1, Twitter\_2 e Twitter\_3. Esta atribuiÁ„o 
+em trÍs tabelas n„o deveria ser necess·ria, mas na vers„o do Pig (antiga) em que foi criado e executado
+este cÛdigo n„o era possÌvel fazer uma junÁ„o da tabela com ela mesma (\emph{self join}).
 
-As pr√≥ximas duas linhas executam as duas jun√ß√µes; a pr√≥xima, um filtro que elimina as duplicatas;
-e as duas pen√∫ltimas executam um agrupamento para contagem. A √∫ltima linha imprime o valor final.
-Somente a partir de um comando DUMP que o Pig come√ßa a construir os \textit{jobs} MapReduce, compilar
-e execut√°-los.
+As prÛximas duas linhas executam as duas junÁıes; a prÛxima, um filtro que elimina as duplicatas;
+e as duas pen˙ltimas executam um agrupamento para contagem. A ˙ltima linha imprime o valor final.
+Somente a partir de um comando DUMP que o Pig comeÁa a construir os \textit{jobs} MapReduce, compilar
+e execut·-los.
 
 \section{Apache Spark}
 
-O Apache Spark √© uma plataforma para computa√ß√£o distribu√≠da que foi projetada para ser de prop√≥sito 
-geral e muito eficiente \citep{zaharia2012resilient, karau2015learning}. A principal diferen√ßa em 
-rela√ß√£o ao MapReduce √© que toda a computa√ß√£o √© feita e armazenada em mem√≥ria, sem necessidade de salvar 
-em disco resultados intermedi√°rios. 
+O Apache Spark È uma plataforma para computaÁ„o distribuÌda que foi projetada para ser de propÛsito 
+geral e muito eficiente \cite{zaharia2012resilient, karau2015learning}. A principal diferenÁa em 
+relaÁ„o ao MapReduce È que toda a computaÁ„o È feita e armazenada em memÛria, sem necessidade de salvar 
+em disco resultados intermedi·rios. 
 
-A unidade b√°sica de dados do Spark √© o \textit{Resilient Distributed Dataset} (RDD). O conceito √© 
-semelhante ao bloco de dados do HDFS, mas trata-se de cole√ß√µes de dados que est√£o na mem√≥ria RAM dos 
-n√≥s do \textit{cluster}. Na pr√°tica, o Spark carrega os dados de um bloco do HDFS na mem√≥ria RAM do n√≥ 
-em que o bloco est√°. Os programas Spark fazem dois tipos de opera√ß√£o com um RDD:
+A unidade b·sica de dados do Spark È o \textit{Resilient Distributed Dataset} (RDD). O conceito È 
+semelhante ao bloco de dados do HDFS, mas trata-se de coleÁıes de dados que est„o na memÛria RAM dos 
+nÛs do \textit{cluster}. Na pr·tica, o Spark carrega os dados de um bloco do HDFS na memÛria RAM do nÛ 
+em que o bloco est·. Os programas Spark fazem dois tipos de operaÁ„o com um RDD:
 
 \begin{itemize}
-	\item \textbf{Transforma√ß√µes}: Transformam um RDD em outro RDD. Entre as transforma√ß√µes mais 
-comuns podemos encontrar as opera√ß√µes de \textit{Map} e \textit{ReduceByKey} (mesmo conceito do MapReduce), 
-ordena√ß√£o e opera√ß√µes de conjuntos, como uni√£o, interse√ß√£o e diferen√ßa.
-	\item \textbf{A√ß√µes}: Produzem algum resultado a partir de um RDD. A√ß√µes t√≠picas consistem em 
+	\item \textbf{TransformaÁıes}: Transformam um RDD em outro RDD. Entre as transformaÁıes mais 
+comuns podemos encontrar as operaÁıes de \textit{Map} e \textit{ReduceByKey} (mesmo conceito do MapReduce), 
+ordenaÁ„o e operaÁıes de conjuntos, como uni„o, interseÁ„o e diferenÁa.
+	\item \textbf{AÁıes}: Produzem algum resultado a partir de um RDD. AÁıes tÌpicas consistem em 
 enumerar alguma quantidade de itens de um RDD, contar e somar. 
 \end{itemize}
 
-O Spark utiliza o conceito de \emph{execu√ß√£o pregui√ßosa}, para que s√≥ quando realmente um resultado 
-tenha de ser produzido (uma \textbf{a√ß√£o} √© executada), e toda a sequ√™ncia de passos necess√°ria √© 
-conhecida, o Spark realmente l√™ os dados e faz c√°lculos na mem√≥ria. Com isso, o motor de execu√ß√£o do 
-Spark consegue otimizar tudo que ser√° executado, escolhendo os melhores n√≥s, a melhor sequ√™ncia, etc.
+O Spark utiliza o conceito de \emph{execuÁ„o preguiÁosa}, para que sÛ quando realmente um resultado 
+tenha de ser produzido (uma \textbf{aÁ„o} È executada), e toda a sequÍncia de passos necess·ria È 
+conhecida, o Spark realmente lÍ os dados e faz c·lculos na memÛria. Com isso, o motor de execuÁ„o do 
+Spark consegue otimizar tudo que ser· executado, escolhendo os melhores nÛs, a melhor sequÍncia, etc.
 
-O Apache Spark tamb√©m vem com um conjunto de bibliotecas com algoritmos para aprendizado de m√°quina, 
-grafos, fluxo cont√≠nuo de dados e SQL. Algumas dessas s√£o vistas a seguir.
+O Apache Spark tambÈm vem com um conjunto de bibliotecas com algoritmos para aprendizado de m·quina, 
+grafos, fluxo contÌnuo de dados e SQL. Algumas dessas s„o vistas a seguir.
 
 \subsection{Utilizando o console python}
 O Apache Spark possui consoles interativos nas linguagens Python e Scala e seus \textit{jobs} podem 
-ser submetidos em batch tamb√©m em Java. A API do Spark √© acessada a partir de um objeto central 
-denominado \texttt{SparkContext}. Esse objeto cont√©m a conex√£o com uma inst√¢ncia do cluster e a partir 
-dele todos os outros objetos e m√©todos s√£o acessados. Ao se iniciar um console do Spark, o objeto j√° 
-est√° automaticamente dispon√≠vel atrav√©s da vari√°vel \texttt{sc}. Para compreender a simplicidade 
-do modelo de programa√ß√£o do Spark, o trecho de c√≥digo abaixo l√™ um arquivo txt e faz a contagem de 
-ocorr√™ncia das palavras.
+ser submetidos em batch tambÈm em Java. A API do Spark È acessada a partir de um objeto central 
+denominado \texttt{SparkContext}. Esse objeto contÈm a conex„o com uma inst‚ncia do cluster e a partir 
+dele todos os outros objetos e mÈtodos s„o acessados. Ao se iniciar um console do Spark, o objeto j· 
+est· automaticamente disponÌvel atravÈs da vari·vel \texttt{sc}. Para compreender a simplicidade 
+do modelo de programaÁ„o do Spark, o trecho de cÛdigo abaixo lÍ um arquivo txt e faz a contagem de 
+ocorrÍncia das palavras.
 
 \begin{lstlisting}[style=MyPythonStyle]
 
@@ -338,21 +338,21 @@ contagemPalavras.collect()
 
 \end{lstlisting}
 
-Para resolver o problema de contagem de tri√¢ngulos utilizando o Spark, a ideia √© semelhante √† usada com 
+Para resolver o problema de contagem de tri‚ngulos utilizando o Spark, a ideia È semelhante ‡ usada com 
 o modelo do MapReduce.
 
 \subsection{Spark SQL}
-O Spark SQL \citep{xin2013shark, armbrust2015spark}, anteriormente chamado de Shark, √© um m√≥dulo do Apache 
-Spark para processamento de dados estruturados (relacionais). Ele utiliza uma abstra√ß√£o denominada 
-\emph{DataFrame}, e tamb√©m serve como uma m√°quina de execu√ß√£o de consultas distribu√≠das baseada em SQL. 
+O Spark SQL \cite{xin2013shark, armbrust2015spark}, anteriormente chamado de Shark, È um mÛdulo do Apache 
+Spark para processamento de dados estruturados (relacionais). Ele utiliza uma abstraÁ„o denominada 
+\emph{DataFrame}, e tambÈm serve como uma m·quina de execuÁ„o de consultas distribuÌdas baseada em SQL. 
 
-Um \emph{DataFrame} do Spark SQL tem as mesmas caracter√≠sticas de um \emph{DataFrame} em R ou em 
+Um \emph{DataFrame} do Spark SQL tem as mesmas caracterÌsticas de um \emph{DataFrame} em R ou em 
 Pandas (Python), e pode ser criado a partir de diversas fontes de dados, como um arquivo JSON, um 
 arquivo texto, um RDD do Spark, uma tabela do Hive, ou qualquer fonte que possua um driver JDBC. 
-O esquema de dados de um \emph{DataFrame} pode ser inferido atrav√©s de reflex√£o ou programaticamente. 
+O esquema de dados de um \emph{DataFrame} pode ser inferido atravÈs de reflex„o ou programaticamente. 
 
-O trecho de c√≥digo abaixo mostra como executar a contagem de tri√¢ngulos utilizando o SQL proposto na 
-se√ß√£o \ref{sec:triangulos}.
+O trecho de cÛdigo abaixo mostra como executar a contagem de tri‚ngulos utilizando o SQL proposto na 
+seÁ„o \ref{sec:triangulos}.
 
 
 \begin{lstlisting}[style=MyPythonStyle]
@@ -380,23 +380,23 @@ print triangulos.collect()
 
 \subsection{Spark GraphX}
 
-O Spark GraphX √© um novo m√≥dulo do Apache Spark que fornece um conjunto de abstra√ß√µes e ferramentas 
-para processamento paralelo de algoritmos em grafos \citep{xin2013graphx}. Nas abstra√ß√µes de 
-v√©rtices e arestas √© poss√≠vel 
-incluir propriedades, como pesos, capacidades m√°ximas e m√≠nimas; ou qualquer outra propriedade que 
+O Spark GraphX È um novo mÛdulo do Apache Spark que fornece um conjunto de abstraÁıes e ferramentas 
+para processamento paralelo de algoritmos em grafos \cite{xin2013graphx}. Nas abstraÁıes de 
+vÈrtices e arestas È possÌvel 
+incluir propriedades, como pesos, capacidades m·ximas e mÌnimas; ou qualquer outra propriedade que 
 seja relevante para modelar um problema. 
 
-O Spark GraphX possui um conjunto de opera√ß√µes essenciais para diversos algoritmos de an√°lise de grafos, 
-como opera√ß√µes em paralelo sobre os v√©rtices/arestas dos grafos, obten√ß√£o de subgrafos, invers√£o de 
-arestas e agrega√ß√£o de vizinhos. Esse √∫ltimo, por exemplo, pode ser usado para calcular o grau de cada 
-v√©rtice de um grafo. Mais detalhes desse m√≥dulo podem ser obtidos na documenta√ß√£o oficial do produto 
+O Spark GraphX possui um conjunto de operaÁıes essenciais para diversos algoritmos de an·lise de grafos, 
+como operaÁıes em paralelo sobre os vÈrtices/arestas dos grafos, obtenÁ„o de subgrafos, invers„o de 
+arestas e agregaÁ„o de vizinhos. Esse ˙ltimo, por exemplo, pode ser usado para calcular o grau de cada 
+vÈrtice de um grafo. Mais detalhes desse mÛdulo podem ser obtidos na documentaÁ„o oficial do produto 
 \footnote{http://spark.apache.org/docs/latest/graphx-programming-guide.html}. 
 
-Como √© recente seu desenvolvimento, ainda s√£o poucos os algoritmos implementados e a √∫nica linguagem 
-suportada √© o Scala. Atualmente ele conta com algoritmos de PageRank \citep{brin2012reprint}, identifica√ß√£o 
-de componentes conectados e contagem de tri√¢ngulos, que √© demonstrada com trecho de c√≥digo abaixo. 
-Comparado com as estrat√©gias de MapReduce, a contagem de tri√¢ngulos utilizando Spark GraphX √© de 
-v√°rias ordens de grandeza mais r√°pido e eficiente em consumo de mem√≥ria. 
+Como È recente seu desenvolvimento, ainda s„o poucos os algoritmos implementados e a ˙nica linguagem 
+suportada È o Scala. Atualmente ele conta com algoritmos de PageRank \cite{brin2012reprint}, identificaÁ„o 
+de componentes conectados e contagem de tri‚ngulos, que È demonstrada com trecho de cÛdigo abaixo. 
+Comparado com as estratÈgias de MapReduce, a contagem de tri‚ngulos utilizando Spark GraphX È de 
+v·rias ordens de grandeza mais r·pido e eficiente em consumo de memÛria. 
 
 
 \begin{lstlisting}[style=MyPythonStyle]

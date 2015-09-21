@@ -1,80 +1,80 @@
 \section{Bancos de dados colunares} 
 \label{sec:colunar}
 
-A ideia por traz dos bancos de dados colunares n√£o √© nova. Uma das primeiras propostas de organizar os 
-dados de um banco de dados por colunas, em vez da tradicional representa√ß√£o por linhas dos bancos de 
-dados relacionais, apareceu em 1969 \citep{estabrook1969theory}. De forma resumida, enquanto um banco de 
-dados relacional tradicional armazena cada registro ou tupla em um espa√ßo cont√≠nuo do disco (ou mem√≥ria), 
-os bancos de dados colunares armazenam cada coluna em espa√ßos cont√≠nuos \citep{Abadi2009}. 
+A ideia por traz dos bancos de dados colunares n„o È nova. Uma das primeiras propostas de organizar os 
+dados de um banco de dados por colunas, em vez da tradicional representaÁ„o por linhas dos bancos de 
+dados relacionais, apareceu em 1969 \cite{estabrook1969theory}. De forma resumida, enquanto um banco de 
+dados relacional tradicional armazena cada registro ou tupla em um espaÁo contÌnuo do disco (ou memÛria), 
+os bancos de dados colunares armazenam cada coluna em espaÁos contÌnuos \cite{Abadi2009}. 
 
-A grande vantagem da representa√ß√£o colunar √© a compress√£o de dados, uma vez que o dom√≠nio dos dados 
-√© preservado em espa√ßos cont√≠guos de disco ou mem√≥ria. 
-Uma das principais formas de compress√£o de dados √© por dicion√°rio, onde cada coluna de uma 
-tabela (ou rela√ß√£o) √© dividida em um √≠ndice com os valores distintos ordenados e um vetor com a 
-codifica√ß√£o dos valores de cada tupla na mesma sequ√™ncia em que aparecem na tabela. 
-Esta codifica√ß√£o utiliza um numero m√≠nimo de bits do dom√≠nio de valores de cada registro, 
-baseada no dicion√°rio. Com os dados comprimidos, menos bytes trafegam entre o disco e a 
-mem√≥ria principal, tornando opera√ß√µes de consulta e agrega√ß√£o mais r√°pidas.
-A Figura \ref{fig:tabular} mostra a representa√ß√£o tradicional de uma tabela num banco de dados 
+A grande vantagem da representaÁ„o colunar È a compress„o de dados, uma vez que o domÌnio dos dados 
+È preservado em espaÁos contÌguos de disco ou memÛria. 
+Uma das principais formas de compress„o de dados È por dicion·rio, onde cada coluna de uma 
+tabela (ou relaÁ„o) È dividida em um Ìndice com os valores distintos ordenados e um vetor com a 
+codificaÁ„o dos valores de cada tupla na mesma sequÍncia em que aparecem na tabela. 
+Esta codificaÁ„o utiliza um numero mÌnimo de bits do domÌnio de valores de cada registro, 
+baseada no dicion·rio. Com os dados comprimidos, menos bytes trafegam entre o disco e a 
+memÛria principal, tornando operaÁıes de consulta e agregaÁ„o mais r·pidas.
+A Figura \ref{fig:tabular} mostra a representaÁ„o tradicional de uma tabela num banco de dados 
 relacional tradicional (orientado por linhas) e a Figura \ref{fig:colunar} mostra como a 
-primeira coluna da rela√ß√£o √© organizada em um banco de dados colunar com compress√£o por dicion√°rio.
+primeira coluna da relaÁ„o È organizada em um banco de dados colunar com compress„o por dicion·rio.
 
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=\linewidth]{./Representacao_colunar.jpg}
-	\caption{Organiza√ß√£o da coluna fname em um banco de dados colunar.}
+	\caption{OrganizaÁ„o da coluna fname em um banco de dados colunar.}
 	\label{fig:colunar}
 \end{figure}
 
 
-Para explicar melhor o mecanismo de compress√£o, suponhe que a coluna \emph{fname} tenha 
-100 caracteres representados por 1 byte cada. Suponhe tamb√©m que a tabela em quest√£o trata-se 
-da lista de todos os cidad√£os brasileiros, ou seja, h√° aproximadamente 200 milh√µes de registros. 
-Logo, o espa√ßo de armazenamento no modelo tradicional √© de $200*10^6 * 100~Bytes \cong 18,62~GBytes$. 
-No armazenamento em formato de colunas, os dados s√£o armazenados em um dicion√°rio que cont√©m uma 
-entrada para cada valor distinto. Suponhe que h√° 10 mil nomes (primeiro nome) distintos no Brasil. 
-Com isso, para o dicion√°rio, s√£o necess√°rios $10*10^3 * 100~bytes \cong 1~Mbyte$. J√° o vetor de 
-valores conter√° os 200 milh√µes de registros, mas codificados pela quantidade m√≠nima de bits 
-necess√°rios para se codificar os 10 mil valores distintos $log_2(~10.000) \cong 13,2$, ou seja, 
-14 bits. Nesse caso, o vetor de valores ter√° $200*10^6 * 14~bits \cong 2,6~GBytes$. Nesse exemplo simples 
-√© poss√≠vel observar um fator de compress√£o de $18,62 / (0,001 + 2,6) \cong 7,2$ vezes.
+Para explicar melhor o mecanismo de compress„o, suponha que a coluna \emph{fname} tenha 
+100 caracteres representados por 1 byte cada. Suponha tambÈm que a tabela em quest„o trata-se 
+da lista de todos os cidad„os brasileiros, ou seja, h· aproximadamente 200 milhıes de registros. 
+Logo, o espaÁo de armazenamento no modelo tradicional È de $200*10^6 * 100~Bytes \cong 18,62~GBytes$. 
+No armazenamento em formato de colunas, os dados s„o armazenados em um dicion·rio que contÈm uma 
+entrada para cada valor distinto. Imagine que h· 10 mil nomes (primeiro nome) distintos no Brasil. 
+Com isso, para o dicion·rio, s„o necess·rios $10*10^3 * 100~bytes \cong 1~Mbyte$. J· o vetor de 
+valores conter· os 200 milhıes de registros, mas codificados pela quantidade mÌnima de bits 
+necess·rios para se codificar os 10 mil valores distintos $log_2(~10.000) \cong 13,2$, ou seja, 
+14 bits. Nesse caso, o vetor de valores ter· $200*10^6 * 14~bits \cong 2,6~GBytes$. Nesse exemplo simples 
+È possÌvel observar um fator de compress„o de $18,62 / (0,001 + 2,6) \cong 7,2$ vezes.
 
-A recupera√ß√£o de um determinado registro (tupla) passa por um acesso direto √† posi√ß√£o dele em 
-cada um dos vetores de valor das colunas da tabela e mais um acesso em cada dicion√°rio para traduzir 
-a codifica√ß√£o para o valor original.
+A recuperaÁ„o de um determinado registro (tupla) passa por um acesso direto ‡ posiÁ„o dele em 
+cada um dos vetores de valor das colunas da tabela e mais um acesso em cada dicion·rio para traduzir 
+a codificaÁ„o para o valor original.
 
-O grande problema nessa representa√ß√£o s√£o opera√ß√µes de remo√ß√£o e inser√ß√£o, que usualmente causam uma 
-reorganiza√ß√£o do dicion√°rio e consequentemente uma reorganiza√ß√£o de todos os dados das colunas cujo 
-dicion√°rio foi reordenado. Por isso, o uso desse tipo de tecnologia deve ser prefer√≠vel em conjuntos 
-de dados cuja opera√ß√£o predominante seja de consulta. Plattner \citep{plattner2009common} alega que 
+O grande problema nessa representaÁ„o s„o operaÁıes de remoÁ„o e inserÁ„o, que usualmente causam uma 
+reorganizaÁ„o do dicion·rio e consequentemente uma reorganizaÁ„o de todos os dados das colunas cujo 
+dicion·rio foi reordenado. Por isso, o uso desse tipo de tecnologia deve ser preferÌvel em conjuntos 
+de dados cuja operaÁ„o predominante seja de consulta. Plattner \cite{plattner2009common} alega que 
 os bancos de dados corporativos possuem uma carga predominantemente de consulta e com isso, 
-pode-se unificar os reposit√≥rios OLTP e OLAP na mesma estrutura, sugerindo para tal, a representa√ß√£o colunar. 
+pode-se unificar os repositÛrios OLTP e OLAP na mesma estrutura, sugerindo para tal, a representaÁ„o colunar. 
 
-Os sistemas modernos que utilizam a representa√ß√£o colunar lan√ßam m√£o de diversas estrat√©gias para 
-minimizar esses efeitos de reorganiza√ß√£o dos dicion√°rios. O SAP HANA, por exemplo, divide os dados 
-em principal e diferencial \citep{plattner2012memory}. Novos registros e atualiza√ß√µes de valores s√£o 
-inclu√≠dos no conjunto diferencial, que √© mantido em tamanho pequeno. As opera√ß√µes de consulta juntam 
+Os sistemas modernos que utilizam a representaÁ„o colunar lanÁam m„o de diversas estratÈgias para 
+minimizar esses efeitos de reorganizaÁ„o dos dicion·rios. O SAP HANA, por exemplo, divide os dados 
+em principal e diferencial \cite{plattner2012memory}. Novos registros e atualizaÁıes de valores s„o 
+incluÌdos no conjunto diferencial, que È mantido em tamanho pequeno. As operaÁıes de consulta juntam 
 os dados do conjunto principal com o conjunto diferencial. Embora a busca no conjunto diferencial seja 
-ineficiente, ela √© realizada sobre um conjunto pequeno de dados. De tempos em tempos, os conjuntos s√£o 
+ineficiente, ela È realizada sobre um conjunto pequeno de dados. De tempos em tempos, os conjuntos s„o 
 mesclados resultando em um novo conjunto principal e um conjunto diferencial praticamente vazio, que 
-conter√° apenas as opera√ß√µes realizadas durante a opera√ß√£o de mesclagem. 
+conter· apenas as operaÁıes realizadas durante a operaÁ„o de mesclagem. 
 
-H√° tamb√©m outros mecanismos de compress√£o para outros dom√≠nios de dados, como por exemplo, n√∫meros inteiros e de ponto 
-flutuante \citep{Abadi2006, Zukowski2006}. √â importante ressaltar que todos estes mecanismos de 
-compress√£o de dados tentam balancear a taxa de compress√£o de dados com o processamento para compress√£o
-e descompress√£o. Em geral, os mecanismos mais eficientes em termos de taxa de compress√£o n√£o s√£o utilizados,
-uma vez que o processamento (CPU) para descompress√£o dos dados durante a execu√ß√£o das consultas
-pode ser um fator determinante. Adicionalmente, em geral, todos os mecanismos de compress√£o de dados
-preservam as propriedades de igualdade e ordena√ß√£o dos dados, ou seja, valores $=$, $<$ ou $>$ no dom√≠nio original
-dos dados s√£o tamb√©m $=$, $<$ ou $>$ no dom√≠nio de compress√£o. Esta propriedade √© extremamente importante, 
-pois a execu√ß√£o de diversos algoritmos da √°lgebra relacional que envolvem a compara√ß√£o e ordena√ß√£o dos
-dados, como a jun√ß√£o, podem ser executados no dom√≠nio dos dados comprimidos, evitando assim processamento 
-desnecess√°rio de descompress√£o dos dados. √â f√°cil observar esta propriedade no exemplo acima da compress√£o
-da coluna \emph{fname}, desde que o dicion√°rio esteja ordenado por nome.
+H· tambÈm outros mecanismos de compress„o para outros domÌnios de dados, como por exemplo, n˙meros inteiros e de ponto 
+flutuante \cite{Abadi2006, Zukowski2006}. … importante ressaltar que todos estes mecanismos de 
+compress„o de dados tentam balancear a taxa de compress„o de dados com o processamento para compress„o
+e descompress„o. Em geral, os mecanismos mais eficientes em termos de taxa de compress„o n„o s„o utilizados,
+uma vez que o processamento (CPU) para descompress„o dos dados durante a execuÁ„o das consultas
+pode ser um fator determinante. Adicionalmente, em geral, todos os mecanismos de compress„o de dados
+preservam as propriedades de igualdade e ordenaÁ„o dos dados, ou seja, valores $=$, $<$ ou $>$ no domÌnio original
+dos dados s„o tambÈm $=$, $<$ ou $>$ no domÌnio de compress„o. Esta propriedade È extremamente importante, 
+pois a execuÁ„o de diversos algoritmos da ·lgebra relacional que envolvem a comparaÁ„o e ordenaÁ„o dos
+dados, como a junÁ„o, podem ser executados no domÌnio dos dados comprimidos, evitando assim processamento 
+desnecess·rio de descompress„o dos dados. … f·cil observar esta propriedade no exemplo acima da compress„o
+da coluna \emph{fname}, desde que o dicion·rio esteja ordenado por nome.
 
-Atualmente, os principais fornecedores de bancos de dados relacionais tradicionais tamb√©m fornecem 
-solu√ß√µes de armazenamento colunar, como Microsoft, Oracle, IBM, SAP e outros. Entretanto, h√° sistemas
+Atualmente, os principais fornecedores de bancos de dados relacionais tradicionais tambÈm fornecem 
+soluÁıes de armazenamento colunar, como Microsoft, Oracle, IBM, SAP e outros. Entretanto, h· sistemas
 gerenciadores de bancos de dados puramente colunares, os comerciais SAP IQ e Actian Vectorwise, e os
-de c√≥digo aberto C-Store e MonetDB.
+de cÛdigo aberto C-Store e MonetDB.
   
 

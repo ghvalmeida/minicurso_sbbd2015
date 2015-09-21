@@ -1,33 +1,33 @@
-\section{Contagem de triÃ¢ngulos} 
+\section{Contagem de triângulos} 
 \label{sec:triangulos}
 
-Nesta seÃ§Ã£o Ã© descrito o problema da contagem de triÃ¢ngulos, que serÃ¡ utilizado
-ao longo deste capÃ­tulo. Este problema Ã© extremamente interessante para a avaliaÃ§Ã£o de 
-tecnologias uma vez que Ã© de simples descriÃ§Ã£o e implementaÃ§Ã£o, logo didÃ¡dico, e complexo
-em termos de execuÃ§Ã£o, desempenho.
+Nesta seção é descrito o problema da contagem de triângulos, que será utilizado
+ao longo deste capítulo. Este problema é extremamente interessante para a avaliação de 
+tecnologias uma vez que é de simples descrição e implementação, logo didádico, e complexo
+em termos de execução, desempenho.
 
-O problema, como o prÃ³prio nome diz, consiste em contar triÃ¢ngulos em um grafo, ou seja,
-contar os subgrafos $t_i$ de um grafo $G$ contendo 3 diferentes vÃ©rtices conectados entre si 
-(triÃ¢ngulos). 
+O problema, como o próprio nome diz, consiste em contar triângulos em um grafo, ou seja,
+contar os subgrafos $t_i$ de um grafo $G$ contendo 3 diferentes vértices conectados entre si 
+(triângulos). 
 
-Uma das grandes aplicaÃ§Ãµes da contagem de triÃ¢ngulos Ã© o cÃ¡lculo do coeficiente de agrupamento 
-de um nÃ³ em um grafo ou do grafo como um todo. Esta mÃ©trica possui diversas aplicaÃ§Ãµes prÃ¡ticas 
-em anÃ¡lises de redes sociais. O coeficiente de agrupamento de um nÃ³ $v$ expressa a probabilidade de 
-dois nÃ³s vizinhos a $v$ serem tambÃ©m vizinhos entre si. Para o grafo $G$ como um todo, o coeficiente 
-de agrupamento Ã© a mÃ©dia dos coeficientes de cada vÃ©rtice do grafo. Altos valores para este coeficiente 
+Uma das grandes aplicações da contagem de triângulos é o cálculo do coeficiente de agrupamento 
+de um nó em um grafo ou do grafo como um todo. Esta métrica possui diversas aplicações práticas 
+em análises de redes sociais. O coeficiente de agrupamento de um nó $v$ expressa a probabilidade de 
+dois nós vizinhos a $v$ serem também vizinhos entre si. Para o grafo $G$ como um todo, o coeficiente 
+de agrupamento é a média dos coeficientes de cada vértice do grafo. Altos valores para este coeficiente 
 significam uma comunidade coesa (\emph{small world community}).
 
-ImplementaÃ§Ãµes de algoritmos eficientes para este problema abundam na literatura. O Algoritmo 
-\ref{alg:inmemorytrianglecounting}, adapdado de \citep{Chu2012} para retornar somente a contagem de 
-triÃ¢ngulos, apresenta uma execuÃ§Ã£o eficiente para o problema, e Ã© a base para as principais 
-implementaÃ§Ãµes de algoritmos que assumem que os dados cabem na memÃ³ria. 
+Implementações de algoritmos eficientes para este problema abundam na literatura. O Algoritmo 
+\ref{alg:inmemorytrianglecounting}, adapdado de \cite{Chu2012} para retornar somente a contagem de 
+triângulos, apresenta uma execução eficiente para o problema, e é a base para as principais 
+implementações de algoritmos que assumem que os dados cabem na memória. 
 
 \begin{algorithm}
-\caption{Algoritmo para contagem de triÃ¢ngulos em memÃ³ria}
+\caption{Contagem de triângulos em memória}
 \label{alg:inmemorytrianglecounting}
 \begin{algorithmic}[1]
     \REQUIRE Grafo $G = (V, E)$
-    \ENSURE $c$, a contagem de triÃ¢ngulos em $G$
+    \ENSURE $c$, a contagem de triângulos em $G$
     \STATE $c \leftarrow 0$
     \FOR{cada $v \in V$}
         \FOR{cada $u \in adj_G(v)$, dado que $u>v$}
@@ -40,39 +40,26 @@ implementaÃ§Ãµes de algoritmos que assumem que os dados cabem na memÃ³ria.
 \end{algorithmic}
 \end{algorithm}
 
-Este algoritmo comeÃ§a por inicializar a variÃ¡vel $c$ de contagem de triÃ¢ngulos com $0$. EntÃ£o, para
-todos os vÃ©rtices do grafo (nomeados $v$), o algoritmo tenta resgatar um vÃ©rtice que seja adjacente a 
-$v$, nomeado de $u$, e outro vÃ©rtice que seja ao mesmo tempo adjacente a $v$ e a $u$, nomeado de $w$.
-Cada vez que esses trÃªs vÃ©rtices conectados por arestas sÃ£o encontrados, o algoritmo incrementa o 
-contador de triÃ¢ngulos $c$. HÃ¡ mais um ponto a ser explicado aqui que Ã© um teste para remover duplicatas
-que garante que $u>v$ e $w>u$, assumindo que os vÃ©rtices possuam identificadores Ãºnicos no domÃ­nio dos
-nÃºmeros naturais, por exemplo. A complexidade deste algoritmo depende da implementaÃ§Ã£o da busca pelos 
-vÃ©rtices $u$ e $w$ nas listas de adjacÃªncias de $v$ e $u$, respectivamente.
+Este algoritmo começa por inicializar a variável $c$ de contagem de triângulos com $0$. Então, para
+todos os vértices do grafo (nomeados $v$), o algoritmo tenta resgatar um vértice que seja adjacente a 
+$v$, nomeado de $u$, e outro vértice que seja ao mesmo tempo adjacente a $v$ e a $u$, nomeado de $w$.
+Cada vez que esses três vértices conectados por arestas são encontrados, o algoritmo incrementa o 
+contador de triângulos $c$. Há mais um ponto a ser explicado aqui que é um teste para remover duplicatas
+que garante que $u>v$ e $w>u$, assumindo que os vértices possuam identificadores únicos no domínio dos
+números naturais, por exemplo. A complexidade deste algoritmo depende da implementação da busca pelos 
+vértices $u$ e $w$ nas listas de adjacências de $v$ e $u$, respectivamente.
 
-O que torna este problema interessante, em termos de execuÃ§Ã£o, Ã© a natureza dos dados. Normalmente, esses
-dados de redes sociais possuem distorÃ§Ã£o (\emph{skew}), seguindo uma funÃ§Ã£o de distribuiÃ§Ã£o chamada 
-\emph{power-law}. Tentando explicar de uma forma simples, o que acontece Ã© que a grande maioria dos 
-vÃ©rtices possuem muito poucas ligaÃ§Ãµes, mas uma pequena fraÃ§Ã£o possui muitas ligaÃ§Ãµes. O grÃ¡fico abaixo 
-mostra a distribuiÃ§Ã£o dos dados. O eixo das abcissas mostra o grau do vÃ©rtice e o eixo das ordenadas 
-mostra quantos vÃ©rtices possuem tal grau.
-
-\begin{figure}[!htbp]
-	\centerline{\includegraphics[width=0.7\linewidth]{power_law.eps}}
-	\caption{DistribuiÃ§Ã£o de dados de redes sociais (\emph{power-law}) com dados do Twitter}
-	\label{fig:powerlaw}
-\end{figure}
-
-Nos exemplos desse capÃ­tulo, serÃ£o utilizados dois conjuntos
-de dados, que foram tambÃ©m adotados por Leskovec et al. \citep{leskovec2012learning} e encontram-se 
-disponibilizados pelo Projeto SNAP (\textit{Stanford Network Analyst Project}). Eles contÃ©m
-usuÃ¡rios do Facebook e do Twitter, com estatÃ­sticas descritas na Tabela \ref{datasets}.
-Deve-se atentar para o fato de que o Twitter e o Facebook possuem polÃ­ticas diferentes; no Twitter
-Ã© possÃ­vel que um usuÃ¡rio siga algum outro sem que este tambÃ©m o siga de volta, enquanto que
-no Facebook a contrapartida Ã© exigida. Isto torna o grafo do Twitter direcionado e o do Facebook
-nÃ£o direcionado. 
+Nos exemplos desse capítulo, serão utilizados dois conjuntos
+de dados, que foram também adotados por Leskovec et al. \cite{leskovec2012learning} e encontram-se 
+disponibilizados pelo Projeto SNAP (\textit{Stanford Network Analyst Project}). Eles contém
+usuários do Facebook e do Twitter, com estatísticas descritas na Tabela \ref{datasets}.
+Deve-se atentar para o fato de que o Twitter e o Facebook possuem políticas diferentes; no Twitter
+é possível que um usuário siga algum outro sem que este também o siga de volta, enquanto que
+no Facebook a contrapartida é exigida. Isto torna o grafo do Twitter direcionado e o do Facebook
+não direcionado. 
 
 \begin{table}[!htbp]
-\caption{EstatÃ­sticas dos conjuntos de redes sociais (Facebook e Twitter) utilizados.}
+\caption{Estatísticas dos conjuntos de redes sociais (Facebook e Twitter) utilizados.}
 \centering
 \label{datasets}
 \begin{tabular}{l|l|l}
@@ -81,14 +68,27 @@ nÃ£o direcionado.
 Conjunto de dados & Facebook & Twitter \\
 \hline
 \hline
-VÃ©rtices          & 4.039     & 81.306 \\
+Vértices          & 4.039     & 81.306 \\
 \hline
 Arestas           & 88.234    & 1.768.149 \\
 \hline
-TriÃ¢ngulos        & 1.612.010 & 13.082.506 \\
+Triângulos        & 1.612.010 & 13.082.506 \\
 \hline
 \hline
 \end{tabular}
 \end{table}
 
+
+O que torna este problema de contagem de triângulos interessante, em termos de complexidade de execução, é a natureza dos dados. Normalmente, esses
+dados de redes sociais possuem distorção (\emph{skew}), seguindo uma função de distribuição chamada 
+\emph{power-law}. Tentando explicar de uma forma simples, o que acontece é que a grande maioria dos 
+vértices possuem muito poucas ligações, mas uma pequena fração possui muitas ligações. O gráfico abaixo 
+mostra a distribuição dos dados. O eixo das abcissas mostra o grau do vértice e o eixo das ordenadas 
+mostra quantos vértices possuem tal grau.
+
+\begin{figure}[!htbp]
+	\centerline{\includegraphics[width=0.7\linewidth]{power_law.eps}}
+	\caption{Distribuição de dados de redes sociais (\emph{power-law}) com dados do Twitter}
+	\label{fig:powerlaw}
+\end{figure}
 

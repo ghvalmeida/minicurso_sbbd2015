@@ -3,33 +3,39 @@
 %
 % This is a public-domain file.
 %
-
+% Charset: ISO8859-1 (latin-1) ·ÈÌÛ˙Á
+%
 \documentclass{SBCbookchapter}
-\usepackage[utf8]{inputenc}
+\usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
 \usepackage[brazilian,english]{babel}
 \usepackage{graphicx}
-\usepackage{listings}
-\usepackage{color}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{amsmath}
-\usepackage[square]{natbib}
-\usepackage{apalike}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{breakcites}
+
+\makeatletter
+\newcommand{\newalgname}[1]{%
+  \renewcommand{\ALG@name}{#1}%
+}
+\newalgname{Algoritmo}% All algorithms will be called "Algorithme"
+\renewcommand{\listalgorithmname}{Lista de \ALG@name s}
+\makeatother
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \renewcommand{\algorithmicif}{\textbf{se}}
-\renewcommand{\algorithmicthen}{\textbf{ent√£o}}
-\renewcommand{\algorithmicdo}{\textbf{fa√ßa}}
+\renewcommand{\algorithmicthen}{\textbf{ent„o}}
+\renewcommand{\algorithmicdo}{\textbf{faÁa}}
 \renewcommand{\algorithmicend}{\textbf{fim}}
 \renewcommand{\algorithmicfor}{\textbf{para}}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
-
 
 \lstdefinestyle{MySQLStyle}{
   frame=tb,
@@ -70,25 +76,25 @@
 \lstset{language=Python,frame=tb}
 \lstset{language=SQL,frame=ltrb}
 
-
-\author{Victor Teixeira de Almeida e Vitor Alc√¢ntara Batista}
+\author{Victor Teixeira de Almeida e Vitor Alc‚ntara Batista}
 \title{Tecnologias para Gerenciamento de Dados na Era do Big Data}
 
 \begin{document}
-
 \maketitle
-\inputencoding{utf8}
+
 \selectlanguage{brazilian}
 
-\include{resumo}
-\include{introducao}
-\include{triangulos}
-\include{relacional}
-\include{colunar}
-\include{memoria}
-\include{mpp}
-\include{hadoop}
-\include{final}
-\include{referencias}
+\input{resumo}
+\input{introducao}
+\input{triangulos}
+\input{relacional}
+\input{colunar}
+\input{memoria}
+\input{mpp}
+\input{hadoop}
+\input{final}
+
+\bibliographystyle{sbc}
+\bibliography{bibliografia}
 
 \end{document}

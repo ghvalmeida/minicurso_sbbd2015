@@ -1,43 +1,43 @@
-\section{Introdu√ß√£o}
+\section{IntroduÁ„o}
 
-A era da informa√ß√£o, com o advento da Internet (Web 2.0), est√° terminando. Estamos entrando na
-era da computa√ß√£o voltada ao consumidor, chamada por Grossman de \textit{Device Era}
-\citep{grossman2012structure} e por Wirfs-Brock de 
-\emph{Ambient Computing Era} \citep{wirfsbrock2011blog} (Figura \ref{fig:ambientcomputing_era}). 
-Nesta era, focada no indiv√≠duo, as pessoas possuem um ambiente rico em recursos e comunica√ß√£o, 
-principalmente atrav√©s de dispositivos m√≥veis. A computa√ß√£o √© somente um alicerce para a entrega 
-e melhoria de vida do indiv√≠duo, que √© seu principal objetivo.
+A era da informaÁ„o, com o advento da Internet (Web 2.0), est· terminando. Estamos entrando na
+era da computaÁ„o voltada ao consumidor, chamada por Grossman de \textit{Device Era}
+\cite{grossman2012structure} e por Wirfs-Brock de 
+\emph{Ambient Computing Era} \cite{wirfsbrock2011blog} (Figura \ref{fig:ambientcomputing_era}). 
+Nesta era, focada no indivÌduo, as pessoas possuem um ambiente rico em recursos e comunicaÁ„o, 
+principalmente atravÈs de dispositivos mÛveis. A computaÁ„o È somente um alicerce para a entrega 
+e melhoria de vida do indivÌduo, que È seu principal objetivo.
 
 \begin{figure}[h]
         \centering
         \includegraphics[width=0.7\linewidth]{3eras-medium.png}
-        \caption{Eras da computa√ß√£o. Retirado do blog de Wirfs-Brock \citep{wirfsbrock2011blog}.}
+        \caption{Eras da computaÁ„o. Retirado do blog de Wirfs-Brock \cite{wirfsbrock2011blog}.}
         \label{fig:ambientcomputing_era}
 \end{figure}
 
 
-O que est√° acontecendo neste momento √© que a quantidade de informa√ß√£o que se est√° gerando 
-est√° em crescimento explosivo. Tecnologias consideradas de \emph{big data} tornam-se 
-necess√°rias para poder eficientemente armazenar, gerenciar, processar ou
-visualizar essa quantidade massiva de informa√ß√£o. Talvez n√£o na mesma velocidade, mas 
-tamb√©m com um extraordin√°rio crescimento, novas tecnologias t√™m surgido para suprir tal
+O que est· acontecendo neste momento È que a quantidade de informaÁ„o que se est· gerando 
+est· em crescimento explosivo. Tecnologias consideradas de \emph{big data} tornam-se 
+necess·rias para poder eficientemente armazenar, gerenciar, processar ou
+visualizar essa quantidade massiva de informaÁ„o. Talvez n„o na mesma velocidade, mas 
+tambÈm com um extraordin·rio crescimento, novas tecnologias tÍm surgido para suprir tal
 necessidade.
 
-Este cap√≠tulo pretende explorar e diferenciar de forma introdut√≥ria diversas tecnologias recentes
-para o gerenciamento de dados na era do big data. Ser√° utilizado como pano de fundo para os
-exemplos, um problema cl√°ssico da comunidade de bancos de dados: a contagem de tri√¢ngulos.
-Esta problema √© perfeito para explicar as diferen√ßas entre as tecnologias em termos de
+Este capÌtulo pretende explorar e diferenciar de forma introdutÛria diversas tecnologias recentes
+para o gerenciamento de dados na era do big data. Ser· utilizado como pano de fundo para os
+exemplos, um problema cl·ssico da comunidade de bancos de dados: a contagem de tri‚ngulos.
+Esta problema È perfeito para explicar as diferenÁas entre as tecnologias em termos de
 expressividade e desempenho, pois pode ser representado por uma simples consulta SQL com
-duas jun√ß√µes, contudo extremamente complexa de ser executada eficientemente. A partir deste
-problema, √© poss√≠vel identificar como cada tecnologia se comporta para representar sua solu√ß√£o,
+duas junÁıes, contudo extremamente complexa de ser executada eficientemente. A partir deste
+problema, È possÌvel identificar como cada tecnologia se comporta para representar sua soluÁ„o,
 bem como seu desempenho. 
 
-O cap√≠tulo est√° subdividido por tecnologia e na Se√ß√£o \ref{sec:final} s√£o apresentadas considera√ß√µes finais
-sobre o que ainda h√° de tecnologia a ser detalhada e que n√£o foi descrito nesse cap√≠tulo. A Se√ß√£o \ref{sec:triangulos}
-detalha o problema da contagem de tri√¢ngulos, que ir√° permear as pr√≥ximas se√ß√µes de tecnologia. A Se√ß√£o 
-\ref{sec:relacional} mostra como funcionam bancos de dados relacionais tradicionais. As Se√ß√µes 
+O capÌtulo est· subdividido por tecnologia e na SeÁ„o \ref{sec:final} s„o apresentadas consideraÁıes finais
+sobre o que ainda h· de tecnologia a ser detalhada e que n„o foi descrito nesse capÌtulo. A SeÁ„o \ref{sec:triangulos}
+detalha o problema da contagem de tri‚ngulos, que ir· permear as prÛximas seÁıes de tecnologia. A SeÁ„o 
+\ref{sec:relacional} mostra como funcionam bancos de dados relacionais tradicionais. As SeÁıes 
 \ref{sec:colunar} e \ref{sec:memoria} mostram as abordagens de bancos de dados orientados a colunas e 
-em mem√≥ria, respectivamente. A Se√ß√£o \ref{sec:mpp} apresenta bancos de dados paralelos e introduz os 
-conceitos de paralelismo de dados e computa√ß√£o. A Se√ß√£o \ref{sec:hadoop} que apresenta o Hadoop e
-alguns dos seus principais frameworks para an√°lise de dados.
+em memÛria, respectivamente. A SeÁ„o \ref{sec:mpp} apresenta bancos de dados paralelos e introduz os 
+conceitos de paralelismo de dados e computaÁ„o. A SeÁ„o \ref{sec:hadoop} que apresenta o Hadoop e
+alguns dos seus principais frameworks para an·lise de dados.
 

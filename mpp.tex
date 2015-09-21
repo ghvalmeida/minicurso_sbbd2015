@@ -1,37 +1,37 @@
 \section{Bancos de dados paralelos}
 \label{sec:mpp}
 
-Bancos de dados paralelos ou massivamente paralelos (MPP, do inglÃªs 
-\emph{massively parallel processing}) tambÃ©m nÃ£o sÃ£o tecnologias 
-recentes, discussÃµes sobre esse assunto e implementaÃ§Ãµes de sistemas
-datam da dÃ©cada de 80-90 \citep{Dewitt1992, Fushimi1986}. Nestes 
-sistemas, os dados das tabelas sÃ£o distribuÃ­dos em diversos 
-nÃ³s de um cluster e o processamento da consulta Ã© paralelizado.
+Bancos de dados paralelos ou massivamente paralelos (MPP, do inglês 
+\emph{massively parallel processing}) também não são tecnologias 
+recentes, discussões sobre esse assunto e implementações de sistemas
+datam da década de 80-90 \cite{Dewitt1992, Fushimi1986}. Nestes 
+sistemas, os dados das tabelas são distribuídos em diversos 
+nós de um cluster e o processamento da consulta é paralelizado.
 
-Os dados podem ser distribuÃ­dos atravÃ©s de particionamento vertical,
-onde as tabelas sÃ£o quebradas por colunas; horizontal, onde as 
-tabelas sÃ£o quebradas por tuplas; ou ambos. A distribuiÃ§Ã£o dos 
-dados entre os nÃ³s pode utilizar o conhecimento prÃ©vio
+Os dados podem ser distribuídos através de particionamento vertical,
+onde as tabelas são quebradas por colunas; horizontal, onde as 
+tabelas são quebradas por tuplas; ou ambos. A distribuição dos 
+dados entre os nós pode utilizar o conhecimento prévio
 das consultas mais utilizas no sistema (\emph{query workload}),
 e o otimizador de consultas, nestes casos, conhecendo a forma
-como os dados estÃ£o distribuÃ­dos, pode repassar a parte das
-consultas para os nÃ³s especÃ­ficos que devem processÃ¡-la. O problema
-geral desta abordagem Ã© que existe a possibilidade de desbalanceamento
-de nÃ³s (\emph{data skew}). O particionamento dos dados por funÃ§Ãµes de hash Ã© 
-bastante utilizado, pois atravÃ©s de boas funÃ§Ãµes de hash Ã© possÃ­vel
+como os dados estão distribuídos, pode repassar a parte das
+consultas para os nós específicos que devem processá-la. O problema
+geral desta abordagem é que existe a possibilidade de desbalanceamento
+de nós (\emph{data skew}). O particionamento dos dados por funções de hash é 
+bastante utilizado, pois através de boas funções de hash é possível
 evitar este desbalanceamento.
 
 A arquitetura dos bancos de dados paralelos pode ser de compartilhamento 
-de memÃ³ria (\emph{shared-memory}, onde a memÃ³ria Ã© compartilhada entre os
-nÃ³s do cluster; compartilhamento de disco (\emph{shared-disk}), onde
-cada nÃ³ do cluster possui sua prÃ³pria memÃ³ria, mas o disco Ã© compartilhado
-entre todos os nÃ³s; ou sem compartilhamento (\emph{shared-nothing}), onde
-cada nÃ³ possui sua prÃ³pria memÃ³ria e disco e o compartilhamento de dados
-entre nÃ³s do cluster se faz atravÃ©s de transferÃªncia por mensagens. As 
+de memória (\emph{shared-memory}, onde a memória é compartilhada entre os
+nós do cluster; compartilhamento de disco (\emph{shared-disk}), onde
+cada nó do cluster possui sua própria memória, mas o disco é compartilhado
+entre todos os nós; ou sem compartilhamento (\emph{shared-nothing}), onde
+cada nó possui sua própria memória e disco e o compartilhamento de dados
+entre nós do cluster se faz através de transferência por mensagens. As 
 arquiteturas com compartilhamento (\emph{shared-memory} e \emph{shared-disk})
-mostraram-se ineficientes em escalabilidade para grandes implantaÃ§Ãµes
-\citep{Dewitt1992, Stonebraker1986}. A Figura \ref{fig:mpp_arq} mostra
-um banco de dados paralelo com um nÃ³ mestre e arquitetura sem 
+mostraram-se ineficientes em escalabilidade para grandes implantações
+\cite{Dewitt1992, Stonebraker1986}. A Figura \ref{fig:mpp_arq} mostra
+um banco de dados paralelo com um nó mestre e arquitetura sem 
 compartilhamento.
 
 
@@ -42,36 +42,36 @@ compartilhamento.
         \label{fig:mpp_arq}
 \end{figure}
 
-Os operadores da Ã¡lgebra relacional sÃ£o todos paralelizÃ¡veis, principalmente
-a junÃ§Ã£o, com algoritmos de distribuiÃ§Ã£o dos dados por funÃ§Ã£o hash 
-\citep{Schneider1989}. A ideia principal destes algoritmos Ã© a de que cada 
-nÃ³ lÃª sua parcela dos dados, aplica uma funÃ§Ã£o hash nos atributos da
-junÃ§Ã£o para determinar o nÃ³ de destino e envia os dados para os nÃ³s especÃ­ficos.
-Desta forma, quando os nÃ³s recebem os dados, hÃ¡ a garantia (pela
-funÃ§Ã£o de hash) de que os nÃ³s que irÃ£o participar do resultado da junÃ§Ã£o 
-estÃ£o fisicamente localizados juntos, neste passo. Cada nÃ³ entÃ£o executa um
-algoritmo linear de junÃ§Ã£o, tipicamente uma junÃ§Ã£o por hash em memÃ³ria,
-e reporta o resultado para o nÃ³ coletor. Este processo Ã© demonstrado na 
-Figura \ref{fig:mpp_hashjoin}. Nesta figura, Ã© mostrada uma arquitetura
-com quatro nÃ³s sem compartilhamento, e estes quatro nÃ³s estÃ£o replicados 
+Os operadores da álgebra relacional são todos paralelizáveis, principalmente
+a junção, com algoritmos de distribuição dos dados por função hash 
+\cite{Schneider1989}. A ideia principal destes algoritmos é a de que cada 
+nó lê sua parcela dos dados, aplica uma função hash nos atributos da
+junção para determinar o nó de destino e envia os dados para os nós específicos.
+Desta forma, quando os nós recebem os dados, há a garantia (pela
+função de hash) de que os nós que irão participar do resultado da junção 
+estão fisicamente localizados juntos, neste passo. Cada nó então executa um
+algoritmo linear de junção, tipicamente uma junção por hash em memória,
+e reporta o resultado para o nó coletor. Este processo é demonstrado na 
+Figura \ref{fig:mpp_hashjoin}. Nesta figura, é mostrada uma arquitetura
+com quatro nós sem compartilhamento, e estes quatro nós estão replicados 
 em duas camadas para melhor mostrar a fase de espalhamento dos dados
-por funÃ§Ã£o de hash (\emph{shuffle}).
+por função de hash (\emph{shuffle}).
 
 \begin{figure}[!htbp]
         \centering
         \includegraphics[width=\linewidth]{./mpp_hashjoin.png}
-        \caption{JunÃ§Ã£o por hash em um banco de dados paralelo sem compartilhamento.}
+        \caption{Junção por hash em um banco de dados paralelo sem compartilhamento.}
         \label{fig:mpp_hashjoin}
 \end{figure}
 
-A soluÃ§Ã£o do problema da contagem dos triÃ¢ngulos apresentada na SeÃ§Ã£o \ref{sec:triangulos}, utilizando
-banco de dados paralelos Ã© a mesma utilizada em bancos de dados relacionais, uma vez que tal tecnologia 
-implementa a Ã¡lgebra relacional. Na SeÃ§Ã£o \ref{sec:relacional} Ã© mostrada 
-a consulta SQL que resolve o problema. Esta consulta envolve duas junÃ§Ãµes, 
-que serÃ£o executadas em paralelo, e as seleÃ§Ãµes de remoÃ§Ã£o de duplicatas que
-serÃ£o aplicadas apÃ³s as junÃ§Ãµes no fluxo de execuÃ§Ã£o das consultas (\emph{pipeline}).
+A solução do problema da contagem dos triângulos apresentada na Seção \ref{sec:triangulos}, utilizando
+banco de dados paralelos é a mesma utilizada em bancos de dados relacionais, uma vez que tal tecnologia 
+implementa a álgebra relacional. Na Seção \ref{sec:relacional} é mostrada 
+a consulta SQL que resolve o problema. Esta consulta envolve duas junções, 
+que serão executadas em paralelo, e as seleções de remoção de duplicatas que
+serão aplicadas após as junções no fluxo de execução das consultas (\emph{pipeline}).
 
-Os principais sistemas gerenciadores paralelos de bancos de dados comerciais sÃ£o Pivotal Greenplum Database, 
-HP Vertica, Teradata, Microsoft SQL Server Parallel Data Warehouse e IBM Netezza. Dentre os de cÃ³digo 
+Os principais sistemas gerenciadores paralelos de bancos de dados comerciais são Pivotal Greenplum Database, 
+HP Vertica, Teradata, Microsoft SQL Server Parallel Data Warehouse e IBM Netezza. Dentre os de código 
 aberto pode-se citar: AsterixDB, Stratosphere (atualmente Apache Flink), Myria e Presto.
 

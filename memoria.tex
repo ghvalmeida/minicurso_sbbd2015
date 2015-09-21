@@ -1,45 +1,45 @@
-\section{Bancos de dados em mem√≥ria}
+\section{Bancos de dados em memÛria}
 \label{sec:memoria}
 
-Sistemas de banco de dados em mem√≥ria s√£o aqueles em que a fonte prim√°ria dos dados reside 
-em mem√≥ria principal (RAM). Esses dados t√™m, usualmente, c√≥pia em disco, para eventuais falhas 
+Sistemas de banco de dados em memÛria s„o aqueles em que a fonte prim·ria dos dados reside 
+em memÛria principal (RAM). Esses dados tÍm, usualmente, cÛpia em disco, para eventuais falhas 
 no hardware ou simplesmente falta de energia. Embora os sistemas de bancos de dados tradicionais 
-tamb√©m mantenham dados em mem√≥ria na forma de \textit{cache}, a principal diferen√ßa √© 
-que, nos bancos de dados em mem√≥ria, a fonte de dado prim√°ria (ou principal) est√° 
-armazenada na mem√≥ria RAM, enquanto nos tradicionais, est√° armazenada em disco 
-\citep{garcia1992main, dewitt1984implementation}.
+tambÈm mantenham dados em memÛria na forma de \textit{cache}, a principal diferenÁa È 
+que, nos bancos de dados em memÛria, a fonte de dado prim·ria (ou principal) est· 
+armazenada na memÛria RAM, enquanto nos tradicionais, est· armazenada em disco 
+\cite{garcia1992main, dewitt1984implementation}.
 
-Esse tipo de tecnologia ganhou for√ßa nos √∫ltimos anos devido aos avan√ßos nas arquiteturas de 
-hardware que, atualmente, permitem sistemas com Terabytes de mem√≥ria RAM compartilhada entre 
-v√°rios processadores. Al√©m disso, houve um barateamento no custo desses equipamentos, o 
-que tornou vi√°vel os sistemas de banco de dados em mem√≥ria. 
+Esse tipo de tecnologia ganhou forÁa nos ˙ltimos anos devido aos avanÁos nas arquiteturas de 
+hardware que, atualmente, permitem sistemas com Terabytes de memÛria RAM compartilhada entre 
+v·rios processadores. AlÈm disso, houve um barateamento no custo desses equipamentos, o 
+que tornou vi·vel os sistemas de banco de dados em memÛria. 
 
-Como o acesso √† mem√≥ria principal chega a ser cerca de 1.000 vezes mais r√°pido que os discos modernos 
-como SSD (disco de estado s√≥lido), esse tipo de tecnologia √© bem convidativo. O leitor mais atento 
+Como o acesso ‡ memÛria principal chega a ser cerca de 1.000 vezes mais r·pido que os discos modernos 
+como SSD (disco de estado sÛlido), esse tipo de tecnologia È bem convidativo. O leitor mais atento 
 pode se perguntar: e se um sistema de banco de dados tradicional tiver um \textit{cache} grande o 
-suficiente para caber todo o volume de dados, qual seria a diferen√ßa? Ainda assim, os sistemas tradicionais s√£o 
-projetados de forma n√£o √≥tima para uso da mem√≥ria, pois h√° ainda a indire√ß√£o do \textit{cache}. 
-Por exemplo, ser√° necess√°rio consultar um gerenciador do \textit{cache} toda vez que for acessar o dado;
-outro exemplo s√£o as estruturas dos √≠ndices, que est√£o em estruturas onde o acesso n√£o √© imediato √Årvores B+. 
+suficiente para caber todo o volume de dados, qual seria a diferenÁa? Ainda assim, os sistemas tradicionais s„o 
+projetados de forma n„o Ûtima para uso da memÛria, pois h· ainda a indireÁ„o do \textit{cache}. 
+Por exemplo, ser· necess·rio consultar um gerenciador do \textit{cache} toda vez que for acessar o dado;
+outro exemplo s„o as estruturas dos Ìndices, que est„o em estruturas onde o acesso n„o È imediato ¡rvores B+. 
 
-Embora existam hardwares especializados com mem√≥ria n√£o vol√°til, fontes de energia redundantes e 
-outros mecanismos para minimizar falhas no hardware, ainda √© virtualmente imposs√≠vel garantir que o 
-dado em mem√≥ria principal esteja seguro. Por isso, uma quest√£o muito importante para bancos de dados 
-em mem√≥ria √© a recupera√ß√£o de falhas. A estrat√©gia tipicamente utilizada 
-√© persistir em disco cada uma das transa√ß√µes em um \textit{log}. Uma transa√ß√£o s√≥ √© conclu√≠da ap√≥s a 
-escrita da mesma no disco (\textit{log}). De tempos em tempos, s√£o criados \textit{checkpoints}, onde 
-uma c√≥pia da mem√≥ria principal √© realizada em disco, podendo assim, descartar os \textit{logs} de transa√ß√µes 
-anteriores ao \textit{checkpoint}. A frequ√™ncia da cria√ß√£o desses \textit{checkpoints} depende da 
+Embora existam hardwares especializados com memÛria n„o vol·til, fontes de energia redundantes e 
+outros mecanismos para minimizar falhas no hardware, ainda È virtualmente impossÌvel garantir que o 
+dado em memÛria principal esteja seguro. Por isso, uma quest„o muito importante para bancos de dados 
+em memÛria È a recuperaÁ„o de falhas. A estratÈgia tipicamente utilizada 
+È persistir em disco cada uma das transaÁıes em um \textit{log}. Uma transaÁ„o sÛ È concluÌda apÛs a 
+escrita da mesma no disco (\textit{log}). De tempos em tempos, s„o criados \textit{checkpoints}, onde 
+uma cÛpia da memÛria principal È realizada em disco, podendo assim, descartar os \textit{logs} de transaÁıes 
+anteriores ao \textit{checkpoint}. A frequÍncia da criaÁ„o desses \textit{checkpoints} depende da 
 confiabilidade do hardware e da volatilidade dos dados.
 
-Outras quest√µes importantes do projeto de sistemas de bancos de dados em mem√≥ria, como controle de concorr√™ncia, processamento de transa√ß√µes, organiza√ß√£o dos dados, m√©todos de acesso, processamento de consultas, desempenho e clusteriza√ß√£o s√£o discutidos em mais detalhes por Garcia-Molina e Salem \citep{garcia1992main}.
+Outras questıes importantes do projeto de sistemas de bancos de dados em memÛria, como controle de concorrÍncia, processamento de transaÁıes, organizaÁ„o dos dados, mÈtodos de acesso, processamento de consultas, desempenho e clusterizaÁ„o s„o discutidos em mais detalhes por Garcia-Molina e Salem \cite{garcia1992main}.
 
-Atualmente, praticamente todos os grandes fornecedores de solu√ß√µes tradicionais de bancos de dados 
-relacionais tamb√©m possuem vers√µes em mem√≥ria de seus produtos, como a Microsoft, Oracle e IBM, mas 
-tamb√©m h√° fornecedores especializados nesse tipo de solu√ß√£o, sendo os principais comerciais o SAP HANA
-e o VoltDB, e o MemSQL de c√≥digo aberto. Alguns desses produtos tamb√©m possuem 
-caracter√≠sticas de bancos de dados colunares apresentados na se√ß√£o \ref{sec:colunar}, principalmente com o objetivo 
-de atingir boa compress√£o dos dados e melhor utiliza√ß√£o da mem√≥ria.
+Atualmente, praticamente todos os grandes fornecedores de soluÁıes tradicionais de bancos de dados 
+relacionais tambÈm possuem versıes em memÛria de seus produtos, como a Microsoft, Oracle e IBM, mas 
+tambÈm h· fornecedores especializados nesse tipo de soluÁ„o, sendo os principais comerciais o SAP HANA
+e o VoltDB, e o MemSQL de cÛdigo aberto. Alguns desses produtos tambÈm possuem 
+caracterÌsticas de bancos de dados colunares apresentados na seÁ„o \ref{sec:colunar}, principalmente com o objetivo 
+de atingir boa compress„o dos dados e melhor utilizaÁ„o da memÛria.
 
 
 
